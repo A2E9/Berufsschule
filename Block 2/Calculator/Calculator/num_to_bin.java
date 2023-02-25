@@ -1,3 +1,4 @@
+package Calculator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -7,6 +8,24 @@ public class num_to_bin {
 
     public static void main(String[] args) {
         
+
+        String originalString1 = "1111111";
+        for (int i = 0; i < originalString1.length(); i++) {
+            originalString1.substring(originalString1.length()-4, originalString1.length());
+        }
+
+
+        String s = "111001";
+String formatted = "";
+
+for (int i = 0; i < s.length(); i++) {
+    if (i % 4 == 0 && i != 0) {
+        formatted += " ";
+    }
+    formatted += s.charAt(i);
+}
+
+System.out.println(formatted); 
         boolean loopExit = true;
         Scanner scanner = new Scanner(System.in);
         do {
@@ -39,25 +58,16 @@ public class num_to_bin {
 
     public static String negDecToBin(int input) {
         String bin = "";
-
-
         for (int n = Math.abs(input); n != 0; n = n / 2)
             bin += Integer.toString(n % 2);
 
-
-
-            
         char[] newArr = new StringBuffer(bin).reverse().toString().toCharArray();
-
         for (int i = 0; i < newArr.length; i++) {
             if (newArr[i] == '1')
                 newArr[i] = '0';
             else
                 newArr[i] = '1';
         }
-
-        //newArr[i] ~= newArr[i];
-
         List<Character> list = addOneBit(newArr);
         list.add(0, '1');
 
@@ -82,7 +92,7 @@ public class num_to_bin {
 
         for (int n = Math.abs(input); n != 0; n = n / 2) {
             bin += Integer.toString(n % 2);
-            System.out.println(n + " : " + 2 + " = " + n / 2 + " Rest " + n % 2);
+            // System.out.println(n + " : " + 2 + " = " + n / 2 + " Rest " + n % 2);
         }
 
         return new StringBuffer(bin).reverse().toString();
