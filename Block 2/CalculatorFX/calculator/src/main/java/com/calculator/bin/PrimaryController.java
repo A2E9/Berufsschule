@@ -2,8 +2,6 @@ package com.calculator.bin;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,23 +9,15 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.util.Duration;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 
 public class PrimaryController {
 
     @FXML
     private TextField decInput;
-    // @FXML
-    // private Label binOutput;
-
     @FXML
     private TextField binInput;
-    // @FXML
-    // private Label decOutput;
 
     @FXML
     private ProgressIndicator progressDec;
@@ -71,6 +61,7 @@ public class PrimaryController {
     }
 
     private void decToBin() throws IOException, InterruptedException {
+        binInput.setText(null);
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.01), event -> {
             double progress = progressDec.getProgress() + 0.01;
             if (progress > 1.0) {
@@ -83,7 +74,7 @@ public class PrimaryController {
             String bin = "";
             for (int n = Integer.parseInt(decInput.getText()); n != 0; n = n / 2)
                 bin += Integer.toString(n % 2);
-            binInput.setText(new StringBuffer(bin).reverse().toString().replaceAll("(.{4})(?!$)", "$1 "));
+            binInput.setText(new StringBuffer(bin).reverse().toString());
             progressDec.setProgress(0);
         });
         timeline.play();
@@ -91,6 +82,7 @@ public class PrimaryController {
     }
 
     public void binToDec() {
+        decInput.setText(null);
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.01), event -> {
             double progress = progressBin.getProgress() + 0.01;
             if (progress > 1.0) {
@@ -115,6 +107,7 @@ public class PrimaryController {
     }
 
     public void negDecToBin() {
+        binInput.setText(null);
         String bin = "";
         for (int n = Math.abs(Integer.parseInt(decInput.getText())); n != 0; n = n / 2)
             bin += Integer.toString(n % 2);
@@ -129,7 +122,7 @@ public class PrimaryController {
         List<Character> list = addOneBit(newArr);
         list.add(0, '1');
 
-        binInput.setText(list.toString().replaceAll("[\\[\\],\\s+]", "").replaceAll("(.{4})(?!$)", "$1 "));
+        binInput.setText(list.toString().replaceAll("[\\[\\],\\s+]", ""));
 
     }
 

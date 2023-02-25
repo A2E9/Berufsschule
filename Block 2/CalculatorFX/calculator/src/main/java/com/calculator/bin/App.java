@@ -4,8 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 /**
@@ -17,7 +17,14 @@ public class App extends Application {
     
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("home"), 351, 235);
+        Image icon = new Image("https://icons-for-free.com/iconfiles/png/512/calculator-131964752453326292.png",128, 128, true, true);
+        stage.getIcons().add(icon);
+        
+        scene = new Scene(loadFXML("home"), 351, 265);
+        stage.setTitle("CALCULATOR");
+        
+        // scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
         stage.setScene(scene);
         stage.show();
     }

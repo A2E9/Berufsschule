@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="235.0" prefWidth="351.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.calculator.bin.PrimaryController">
+<VBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="265.0" prefWidth="351.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.calculator.bin.PrimaryController">
    <children>
       <Label alignment="CENTER" graphicTextGap="5.0" lineSpacing="13.0" prefHeight="21.0" prefWidth="122.0" text="CALCULATOR" textAlignment="CENTER">
          <font>
@@ -66,6 +66,6 @@
       <Button fx:id="primaryButton" onAction="#switchToSecondary" text="Switch to Secondary View" />
    </children>
    <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" />
+      <Insets left="20.0" right="20.0" />
    </padding>
 </VBox>
