@@ -6,6 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+// import jfxtras.styles.jmetro.JMetro;
+
+
 import java.io.IOException;
 
 /**
@@ -19,12 +22,10 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         Image icon = new Image("https://icons-for-free.com/iconfiles/png/512/calculator-131964752453326292.png",128, 128, true, true);
         stage.getIcons().add(icon);
+        stage.setTitle("pw: vale");
         
         scene = new Scene(loadFXML("home"), 351, 265);
-        stage.setTitle("CALCULATOR");
-        
-        // scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }

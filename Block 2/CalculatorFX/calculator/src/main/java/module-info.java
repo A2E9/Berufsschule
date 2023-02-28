@@ -5,6 +5,6 @@ module com.calculator.bin {
     // other module declarations
 
     opens com.calculator.bin to javafx.fxml;
-
     exports com.calculator.bin;
+    
 }

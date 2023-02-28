@@ -1,13 +1,13 @@
 package com.calculator.bin;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.io.IOException;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.scene.control.ProgressIndicator;
 import javafx.util.Duration;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
@@ -33,6 +33,8 @@ public class PrimaryController {
     private void switchToSecondary() throws IOException {
         App.setRoot("secondary");
     }
+
+
 
     @FXML
     private void resetFields() throws IOException {
