@@ -62,7 +62,7 @@
          </children>
       </HBox>
       <ProgressBar fx:id="resetBar" prefWidth="200.0" progress="0.0" />
-      <Button mnemonicParsing="false" onAction="#resetFields" prefHeight="25.0" prefWidth="261.0" text="Reset" />
+      <Button mnemonicParsing="false" onAction="#resetFields" prefHeight="25.0" prefWidth="261.0" text="Reset" textAlignment="CENTER" />
       <Button fx:id="primaryButton" onAction="#switchToSecondary" text="Switch to Secondary View" />
    </children>
    <padding>

@@ -7,25 +7,6 @@ public class num_to_bin {
 
 
     public static void main(String[] args) {
-        
-
-        String originalString1 = "1111111";
-        for (int i = 0; i < originalString1.length(); i++) {
-            originalString1.substring(originalString1.length()-4, originalString1.length());
-        }
-
-
-        String s = "111001";
-String formatted = "";
-
-for (int i = 0; i < s.length(); i++) {
-    if (i % 4 == 0 && i != 0) {
-        formatted += " ";
-    }
-    formatted += s.charAt(i);
-}
-
-System.out.println(formatted); 
         boolean loopExit = true;
         Scanner scanner = new Scanner(System.in);
         do {
