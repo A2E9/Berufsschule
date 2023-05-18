@@ -14,7 +14,7 @@
    <children>
       <AnchorPane id="sdf" layoutY="85.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="395.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
          <children>
-            <TextField fx:id="usernameField" layoutX="250.0" layoutY="72.0" onKeyPressed="#submitPw" text="VERÄNDERUNG" />
+            <TextField fx:id="usernameField" layoutX="250.0" layoutY="72.0" onKeyPressed="#submitPw" text="GEÄNDERT" />
             <PasswordField fx:id="passwordField" layoutX="250.0" layoutY="150.0" onKeyPressed="#submitPw" />
             <CheckBox layoutX="92.0" layoutY="315.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="215.0" text="Kassenbereitstellung">
                <font>
