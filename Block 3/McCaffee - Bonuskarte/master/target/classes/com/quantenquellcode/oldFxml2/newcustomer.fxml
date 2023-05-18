@@ -38,7 +38,7 @@
          <children>
             <ImageView fitHeight="70.0" fitWidth="70.0" layoutX="39.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@pics/Neukunde%20Icon.png" />
+                  <Image url="@clipart4814769.png" />
                </image>
             </ImageView>
             <Label layoutX="219.0" layoutY="20.0" text="Neukunde anlegen" textAlignment="CENTER" underline="true">

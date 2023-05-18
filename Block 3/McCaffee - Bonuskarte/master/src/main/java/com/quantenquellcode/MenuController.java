@@ -4,13 +4,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+
+import com.quantenquellcode.Database.DatabaseConnection;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,62 +33,98 @@ import javafx.scene.text.TextAlignment;
 
 public class MenuController implements Initializable {
 
-    @FXML
-    private Button newKdnBtn;
-    @FXML
-    private Button kdnApplyBtn;
-    @FXML
-    private AnchorPane anchorPane;
-    @FXML
-    private TextField customerIdField;
+    // @FXML
+    // private Button newKdnBtn;
+    // @FXML
+    // private Button kdnApplyBtn;
+    // @FXML
+    // private AnchorPane anchorPane;
+    // @FXML
+    // private TextField customerIdField;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Map<String, List<Product>> productsByCategory = new HashMap<>();
 
-        customerIdField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                customerIdField.setText(newValue.replaceAll("[^\\d]", ""));
-            } else if (newValue.length() > 10) {
-                customerIdField.setText(oldValue);
-            }
-        });
-
-        try {
-            displayButtons(readCaffeeDb());
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+        for (String category : fetchCategories()) {
+            productsByCategory.put(category, readProductsByCategory(category));
         }
     }
 
-    @FXML
-    private void checkCustomer() throws IOException {
-        List<Customer> customers = readCustomersDb();
-        String inputId = customerIdField.getText().trim();
+    private List<String> fetchCategories() {
+        DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
+        String getCategoriesSql = "SELECT DISTINCT category FROM products";
 
-        for (Customer customer : customers) {
-            if (customer.id.equals(inputId)) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Gefunden!");
-                alert.setHeaderText(null);
-                alert.setContentText("Kunde: " + customer.firstName + " " + customer.secondName);
+        List<String> categories = new ArrayList<>();
 
-                Optional<ButtonType> result = alert.showAndWait();
-                return;
+        try (Connection connection = dbConnection.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(getCategoriesSql)) {
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                categories.add(rs.getString("category"));
             }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
-        ButtonType closeBtn = new ButtonType("Schließen", ButtonData.CANCEL_CLOSE);
-        ButtonType addButtonType = new ButtonType("Kunden erstellen", ButtonData.NEXT_FORWARD);
-        Alert alert = new Alert(Alert.AlertType.ERROR,"",closeBtn,addButtonType);
-        alert.setTitle("Fehler!");
-        alert.setHeaderText(null);
-        alert.setContentText("Kunden nicht gefunden!");
+        return categories;
+    }
 
-        Optional<ButtonType> result = alert.showAndWait();
+    @FXML
+    private void logout() throws IOException {
+        App.setRoot("login");
+    }
 
-        if (result.isPresent() && result.get() == addButtonType) {
-            App.setRoot("newcustomer");
+    @FXML
+    private List<Product> readProductsByCategory(String category) {
+        DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
+        String getUserSql = "SELECT po.name, po.category, pi.size, pi.price "
+                + " FROM products po "
+                + " INNER JOIN prices pi ON pi.product_id = po.id "
+                + " WHERE po.category = ?";
+
+        try (Connection connection = dbConnection.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(getUserSql)) {
+
+            pstmt.setString(1, category);
+            ResultSet rs = pstmt.executeQuery();
+
+            Map<String, Product> productMap = new HashMap<>();
+
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String size = rs.getString("size");
+                float price = rs.getFloat("price");
+
+                Product product = productMap.get(name);
+                if (product == null) {
+                    product = new Product(name);
+                    productMap.put(name, product);
+                }
+
+                switch (size) {
+                    case "small":
+                        product.setSmallPrice(price);
+                        break;
+                    case "mid":
+                        product.setMidPrice(price);
+                        break;
+                    case "big":
+                        product.setBigPrice(price);
+                        break;
+                    case "universal":
+                        product.setUniversalPrice(price);
+                        break;
+                }
+            }
+            List<Product> products = new ArrayList<>(productMap.values());
+
+            return products;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
-
+        return null;
     }
 
     @FXML
@@ -87,60 +132,7 @@ public class MenuController implements Initializable {
         App.setRoot("newcustomer");
     }
 
-    private List<Caffee> readCaffeeDb() throws IOException, URISyntaxException {
-        URL url = App.class.getResource("data/caffee_liste.db");
-        URI uri = url.toURI();
-        File file = new File(uri);
-        Scanner sc = new Scanner(file);
-
-        List<Caffee> caffeeList = new ArrayList<Caffee>();
-
-        while (sc.hasNextLine()) {
-            String line = sc.nextLine();
-            String[] parts = line.split(";");
-
-            String name = parts[0].trim();
-            float small = (parts.length > 1 && !parts[1].isEmpty()) ? Float.parseFloat(parts[1]) : 0.0f;
-            float mid = (parts.length > 2 && !parts[2].isEmpty()) ? Float.parseFloat(parts[2]) : 0.0f;
-            float big = (parts.length > 3 && !parts[3].isEmpty()) ? Float.parseFloat(parts[3]) : 0.0f;
-
-            Caffee caffe = new Caffee(name, small, mid, big);
-
-            caffeeList.add(caffe);
-        }
-        sc.close();
-
-        return caffeeList;
-    }
-
-    private List<Customer> readCustomersDb() {
-        File file = new File("kunden_liste.db");
-        if (!file.exists()) {
-            // TODO
-        }
-        List<Customer> customers = new ArrayList<Customer>();
-        try (Scanner sc = new Scanner(file)) {
-
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine();
-                String[] parts = line.split(";");
-
-                String id = parts[0].trim();
-                String firstName = parts[1].trim();
-                String secondName = parts[2].trim();
-
-                Customer customer = new Customer(id, firstName, secondName);
-
-                customers.add(customer);
-            }
-            sc.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("FILE NOT FOUND");
-        }
-        return customers;
-    }
-
-    private void displayButtons(List<Caffee> caffeeList) {
+    private void displayButtons(List<Product> caffeeList) {
         double startX = 40.0; // Start position X
         double startY = 100.0; // Start position Y
         double gapX = 212.0; // Gap between each button horizontally
@@ -148,7 +140,7 @@ public class MenuController implements Initializable {
         int buttonsPerRow = 4; // Number of buttons per row
 
         for (int i = 0; i < caffeeList.size(); i++) {
-            Caffee caffee = caffeeList.get(i);
+            Product caffee = caffeeList.get(i);
 
             // Calculate the row and column based on the index
             int row = i / buttonsPerRow;
@@ -165,9 +157,43 @@ public class MenuController implements Initializable {
                 // Handle button click here
             });
 
-            anchorPane.getChildren().add(btn);
+            // anchorPane.getChildren().add(btn);
         }
     }
+
+    // @FXML
+    // private void checkCustomer() throws IOException {
+    // List<Customer> customers = readCustomersDb();
+    // // String inputId = customerIdField.getText().trim();
+    // String inputId = "customerIdField.getText().trim();";
+
+    // for (Customer customer : customers) {
+    // if (customer.id.equals(inputId)) {
+    // Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    // alert.setTitle("Gefunden!");
+    // alert.setHeaderText(null);
+    // alert.setContentText("Kunde: " + customer.firstName + " " +
+    // customer.secondName);
+
+    // Optional<ButtonType> result = alert.showAndWait();
+    // return;
+    // }
+    // }
+    // ButtonType closeBtn = new ButtonType("Schließen", ButtonData.CANCEL_CLOSE);
+    // ButtonType addButtonType = new ButtonType("Kunden erstellen",
+    // ButtonData.NEXT_FORWARD);
+    // Alert alert = new Alert(Alert.AlertType.ERROR, "", closeBtn, addButtonType);
+    // alert.setTitle("Fehler!");
+    // alert.setHeaderText(null);
+    // alert.setContentText("Kunden nicht gefunden!");
+
+    // Optional<ButtonType> result = alert.showAndWait();
+
+    // if (result.isPresent() && result.get() == addButtonType) {
+    // App.setRoot("newcustomer");
+    // }
+
+    // }
 
 }
 
@@ -188,17 +214,44 @@ class Customer {
     }
 }
 
-class Caffee {
+class Product {
+
     String name;
     float small;
     float mid;
     float big;
+    float universal;
 
-    public Caffee(String name, float small, float mid, float big) {
+    public Product(String name) {
+        this.name = name;
+    }
+
+    public Product(String name, float universal) {
+        this.name = name;
+        this.universal = universal;
+    }
+
+    public Product(String name, float small, float mid, float big) {
         this.name = name;
         this.small = small;
         this.mid = mid;
         this.big = big;
+    }
+
+    public void setSmallPrice(float small) {
+        this.small = small;
+    }
+
+    public void setMidPrice(float mid) {
+        this.mid = mid;
+    }
+
+    public void setBigPrice(float big) {
+        this.big = big;
+    }
+
+    public void setUniversalPrice(float universal) {
+        this.universal = universal;
     }
 
     @Override

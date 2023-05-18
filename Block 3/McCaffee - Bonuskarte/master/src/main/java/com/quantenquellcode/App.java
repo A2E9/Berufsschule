@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import com.quantenquellcode.Database.DatabaseUtils;
+
 /**
  * JavaFX App
  */
@@ -21,26 +23,20 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("menu")); // , 640, 480
+        scene = new Scene(loadFXML("menu"));
         stage.setScene(scene);
         stage.show();
         App.stage = stage;
+
+        DatabaseUtils.createNewTable();
     }
+
+    
 
     static void setRoot(String fxml) throws IOException {
         Parent root = loadFXML(fxml);
         scene.setRoot(root);
-
-        if(root instanceof Region) {
-            // Cast the Parent to a Region
-            Region region = (Region) root;
-    
-            // Set the size of the stage based on the size of the root
-            stage.setWidth(region.getPrefWidth());
-            stage.setHeight(region.getPrefHeight());
-        }
-
-        // Center the stage on the screen
+        scene.getWindow().sizeToScene();
         stage.centerOnScreen();
     }
 

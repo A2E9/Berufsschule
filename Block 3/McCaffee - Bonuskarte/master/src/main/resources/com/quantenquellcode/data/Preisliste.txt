@@ -1,0 +1,31 @@
+
+coffe;Espresso; 1,69; ; 2,19
+coffe;Espresso Macchiato; 1,79; ; 
+coffe;Cafe; 1,79; 2,19; 2,49
+coffe;Flat White Espresso; 1,89; 2,29; 2,59
+coffe;Cappuccino; 1,99; 2,39; 2,69
+coffe;Caffe Latte; 1,99; 2,39; 2,69
+coffe;Latte Macchiato; 2,39; 2,69
+coffe;Mocha Espresso; 2,29; 2,69; 2,99
+coffe;Vienna; 2,29; 2,69; 2,99
+
+gebaeck;White Choc Lemon Cookie; 1,59
+gebaeck;Blueberry Cheesecake; 1,00
+
+frappes;Schoko;2,99;;3,29
+frappes;Chai;2,99;;3,29
+frappes;Mocha;2,99;;3,29
+frappes;Caramel;2,99;;3,29
+
+iceDrink;Iced Schokolade;2,59;;2,99
+iceDrink;Iced Coffee;2,59;;2,99
+
+iital;Italian Bagel;2,69
+iital;Chicken Bagel;2,69
+
+kaltgetraenk;Stilles Mineralwasser;1,99
+kaltgetraenk;Bionade;2,29
+
+dessert;Zitronenkuchen;1,00
+
+
