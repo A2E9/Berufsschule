@@ -26,6 +26,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.AnchorPane;
@@ -41,6 +42,9 @@ public class MenuController implements Initializable {
     // private AnchorPane anchorPane;
     // @FXML
     // private TextField customerIdField;
+
+    @FXML
+    private MenuButton menubtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -71,12 +75,6 @@ public class MenuController implements Initializable {
         return categories;
     }
 
-    @FXML
-    private void logout() throws IOException {
-        App.setRoot("login");
-    }
-
-    @FXML
     private List<Product> readProductsByCategory(String category) {
         DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
         String getUserSql = "SELECT po.name, po.category, pi.size, pi.price "
@@ -127,10 +125,7 @@ public class MenuController implements Initializable {
         return null;
     }
 
-    @FXML
-    private void switchNewCustomer() throws IOException, URISyntaxException {
-        App.setRoot("newcustomer");
-    }
+   
 
     private void displayButtons(List<Product> caffeeList) {
         double startX = 40.0; // Start position X
@@ -161,6 +156,21 @@ public class MenuController implements Initializable {
         }
     }
 
+
+
+
+
+
+    
+    @FXML
+    private void logout() throws IOException {
+        App.setRoot("login");
+    }
+
+    @FXML
+    private void newCustomer() throws IOException, URISyntaxException {
+        App.setRoot("newcustomer");
+    }
     // @FXML
     // private void checkCustomer() throws IOException {
     // List<Customer> customers = readCustomersDb();
