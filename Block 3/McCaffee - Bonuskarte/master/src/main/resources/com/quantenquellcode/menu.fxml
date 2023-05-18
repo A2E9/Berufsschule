@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="1027.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="1027.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.quantenquellcode.MenuController">
    <children>
       <AnchorPane prefHeight="75.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
          <children>
@@ -25,8 +25,8 @@
                   <Image url="@pics/Coffee%20Icon.png" />
                </image>
             </ImageView>
-            <Button layoutX="555.0" layoutY="10.0" mnemonicParsing="false" text="Neukunde" />
-            <Button layoutX="555.0" layoutY="45.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" styleClass="cancelButton" text="Abmelden" />
+            <Button layoutX="555.0" layoutY="10.0" mnemonicParsing="false" onAction="#newCustomer" text="Neukunde" />
+            <Button layoutX="555.0" layoutY="45.0" mnemonicParsing="false" onAction="#logout" prefHeight="25.0" prefWidth="71.0" styleClass="cancelButton" text="Abmelden" />
          </children>
       </AnchorPane>
       <AnchorPane layoutY="86.0" prefHeight="449.0" prefWidth="1177.0">
@@ -46,7 +46,7 @@
                                     <Insets />
                                  </opaqueInsets>
                               </SplitMenuButton>
-                              <Button layoutX="254.0" layoutY="26.0" mnemonicParsing="false" onAction="#articleListView" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Espresso Macchiato" />
+                              <Button layoutX="254.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Espresso Macchiato" />
                               <SplitMenuButton alignment="CENTER" contentDisplay="CENTER" layoutX="26.0" layoutY="91.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Cafe" textAlignment="CENTER">
                                  <items>
                                     <MenuItem mnemonicParsing="false" text="klein" />
@@ -160,7 +160,7 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab disable="true" style="-fx-background-color: 0;" text="     ">
+                  <Tab disable="true" style="-fx-background-color: transparent;" text="     ">
                      <content>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" />
                      </content>

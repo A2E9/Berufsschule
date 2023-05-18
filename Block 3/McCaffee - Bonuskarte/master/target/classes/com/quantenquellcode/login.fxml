@@ -10,12 +10,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.quantenquellcode.LoginController">
    <children>
       <AnchorPane id="sdf" layoutY="85.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="395.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
          <children>
-            <PasswordField fx:id="passwordField" layoutX="250.0" layoutY="150.0" />
-            <TextField fx:id="usernameField" layoutX="250.0" layoutY="72.0" />
+            <TextField fx:id="usernameField" layoutX="250.0" layoutY="72.0" onKeyPressed="#submitPw" />
+            <PasswordField fx:id="passwordField" layoutX="250.0" layoutY="150.0" onKeyPressed="#submitPw" />
             <CheckBox layoutX="92.0" layoutY="315.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="215.0" text="Kassenbereitstellung">
                <font>
                   <Font size="18.0" />
@@ -41,7 +41,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button layoutX="135.0" layoutY="200.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Login" />
+            <Button layoutX="135.0" layoutY="200.0" mnemonicParsing="false" onAction="#checkCredentials" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Login" />
             <Button layoutX="385.0" layoutY="200.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="cancelButton" text="Shutdown" />
          </children>
       </AnchorPane>

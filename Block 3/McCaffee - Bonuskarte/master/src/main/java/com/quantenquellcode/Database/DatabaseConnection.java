@@ -15,9 +15,6 @@ public class DatabaseConnection {
         try {
             String url = "jdbc:sqlite:" + dbPath;
             connection = DriverManager.getConnection(url);
-            
-            System.out.println("Connection to SQLite has been established.");
-            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }   
