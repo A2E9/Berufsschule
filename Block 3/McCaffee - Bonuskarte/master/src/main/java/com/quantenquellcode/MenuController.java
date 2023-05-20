@@ -143,6 +143,9 @@ public class MenuController implements Initializable {
     private AnchorPane dessertAnchor;
 
     @FXML
+    private TextField customeridField;
+
+    @FXML
     private Label priceLabel;
 
     private static float totalPrice = 0.0f;
@@ -173,7 +176,7 @@ public class MenuController implements Initializable {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
         totalPrice += price;
-        priceLabel.setText("Preis: "+df.format(totalPrice)+ "€");
+        priceLabel.setText("Preis: " + df.format(totalPrice) + "€");
     }
 
     private ListView<ButtonBase> displayButtons(List<Product> products) {
@@ -196,6 +199,7 @@ public class MenuController implements Initializable {
                 }
             };
 
+            // TODO: refactor
             if (caffee.universal == 0.0) {
                 MenuButton menuBtn = new MenuButton(caffee.name);
 
@@ -326,37 +330,40 @@ public class MenuController implements Initializable {
     private void newCustomer() throws IOException, URISyntaxException {
         App.setRoot("newcustomer");
     }
+
     // @FXML
     // private void checkCustomer() throws IOException {
-    // List<Customer> customers = readCustomersDb();
-    // // String inputId = customerIdField.getText().trim();
-    // String inputId = "customerIdField.getText().trim();";
+    //     DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
+    //     String getUserSql = "";
+    //     List<Customer> customers = readCustomersDb();
+    //     // String inputId = customerIdField.getText().trim();
+    //     String inputId = "customerIdField.getText().trim();";
 
-    // for (Customer customer : customers) {
-    // if (customer.id.equals(inputId)) {
-    // Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    // alert.setTitle("Gefunden!");
-    // alert.setHeaderText(null);
-    // alert.setContentText("Kunde: " + customer.firstName + " " +
-    // customer.secondName);
+    //     for (Customer customer : customers) {
+    //         if (customer.id.equals(inputId)) {
+    //             Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    //             alert.setTitle("Gefunden!");
+    //             alert.setHeaderText(null);
+    //             alert.setContentText("Kunde: " + customer.firstName + " " +
+    //                     customer.secondName);
 
-    // Optional<ButtonType> result = alert.showAndWait();
-    // return;
-    // }
-    // }
-    // ButtonType closeBtn = new ButtonType("Schließen", ButtonData.CANCEL_CLOSE);
-    // ButtonType addButtonType = new ButtonType("Kunden erstellen",
-    // ButtonData.NEXT_FORWARD);
-    // Alert alert = new Alert(Alert.AlertType.ERROR, "", closeBtn, addButtonType);
-    // alert.setTitle("Fehler!");
-    // alert.setHeaderText(null);
-    // alert.setContentText("Kunden nicht gefunden!");
+    //             Optional<ButtonType> result = alert.showAndWait();
+    //             return;
+    //         }
+    //     }
+    //     ButtonType closeBtn = new ButtonType("Schließen", ButtonData.CANCEL_CLOSE);
+    //     ButtonType addButtonType = new ButtonType("Kunden erstellen",
+    //             ButtonData.NEXT_FORWARD);
+    //     Alert alert = new Alert(Alert.AlertType.ERROR, "", closeBtn, addButtonType);
+    //     alert.setTitle("Fehler!");
+    //     alert.setHeaderText(null);
+    //     alert.setContentText("Kunden nicht gefunden!");
 
-    // Optional<ButtonType> result = alert.showAndWait();
+    //     Optional<ButtonType> result = alert.showAndWait();
 
-    // if (result.isPresent() && result.get() == addButtonType) {
-    // App.setRoot("newcustomer");
-    // }
+    //     if (result.isPresent() && result.get() == addButtonType) {
+    //         App.setRoot("newcustomer");
+    //     }
 
     // }
 
