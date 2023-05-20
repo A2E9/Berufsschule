@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="1027.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.quantenquellcode.MenuController">
+   <children>
+      <AnchorPane prefHeight="75.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
+         <children>
+            <Button layoutX="381.0" layoutY="25.0" mnemonicParsing="false" text="Kundennummer bestätigen" />
+            <TextField fx:id="customerIdField" layoutX="121.0" layoutY="25.0" prefHeight="26.0" prefWidth="245.0" />
+            <ImageView fitHeight="70.0" fitWidth="70.0" layoutX="39.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/Coffee%20Icon.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="555.0" layoutY="10.0" mnemonicParsing="false" onAction="#newCustomer" text="Neukunde" />
+            <Button layoutX="555.0" layoutY="45.0" mnemonicParsing="false" onAction="#logout" prefHeight="25.0" prefWidth="71.0" styleClass="cancelButton" text="Abmelden" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutY="86.0" prefHeight="449.0" prefWidth="1177.0">
+         <children>
+            <TabPane prefHeight="320.0" prefWidth="640.0" style="-fx-background-color: #92a8D1; -fx-border-color: #92a8D1;" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab fx:id="coffeeTab" style="-fx-background-color: #92a8D1;" text="Coffee &amp; More">
+                     <content>
+                        <AnchorPane fx:id="coffeeAnchor" prefHeight="289.0" prefWidth="797.0" />
+                     </content>
+                  </Tab>
+                <Tab style="-fx-background-color: #92a8D1;" text="Kuchen und Gebäck">
+                     <content>
+                        <AnchorPane fx:id="gebaeckAnchor" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <!-- <Button layoutX="26.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="White Choc Lemon Cookie" />
+                              <Button layoutX="254.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Blueberry Cheesecake" /> -->
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab style="-fx-background-color: #92a8D1;" text="Frappés">
+                     <content>
+                        <AnchorPane fx:id="frappesAnchor" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <!-- <Button layoutX="26.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Schoko" />
+                              <Button layoutX="254.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Chai" />
+                              <Button layoutX="482.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Mocha" />
+                              <Button layoutX="26.0" layoutY="91.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Caramel" /> -->
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab style="-fx-background-color: #92a8D1;" text="Iced Drinks">
+                     <content>
+                        <AnchorPane fx:id="icedrinkAnchor" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <!-- <Button layoutX="26.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Iced Schokolade" />
+                              <Button layoutX="254.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Iced Coffee" /> -->
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab style="-fx-background-color: #92a8D1;" text="Vital und Frisch">
+                     <content>
+                        <AnchorPane fx:id="vitalAnchor" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <!-- <Button layoutX="26.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Italian Bagel" />
+                              <Button layoutX="254.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Chicken Bagel" /> -->
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab style="-fx-background-color: #92a8D1;" text="Kaltgetränke">
+                     <content>
+                        <AnchorPane fx:id="kaltgetraenkAnchor" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <!-- <Button layoutX="26.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Stilles Wasser" />
+                              <Button layoutX="254.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Bionade" /> -->
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab style="-fx-background-color: #92a8D1;" text="Desserts">
+                     <content>
+                        <AnchorPane fx:id="dessertAnchor" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <!-- <Button layoutX="26.0" layoutY="26.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="defButton" text="Zitronenkuchen" /> -->
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab disable="true" style="-fx-background-color: transparent;" text="     ">
+                     <content>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+            <ListView layoutX="673.0" layoutY="33.0" prefHeight="200.0" prefWidth="200.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutY="405.0" prefHeight="75.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
+         <children>
+            <ImageView fitHeight="75.0" fitWidth="150.0" layoutX="497.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/McCafe%20Icon.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="27.0" layoutY="18.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="cancelButton" text="Cancel Order" />
+            <Button layoutX="189.0" layoutY="18.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="confirmButton" text="Confirm Order" />
+            <Label fx:id="priceLabel" layoutX="345.0" layoutY="25.0" prefHeight="27.0" prefWidth="143.0" text="Preis: 0€">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

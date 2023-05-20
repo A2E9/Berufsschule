@@ -5,13 +5,16 @@ import com.quantenquellcode.Database.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 
 public class NewCustomerController {
 
@@ -93,9 +96,8 @@ public class NewCustomerController {
             pstmt.setString(2, secondname);
             pstmt.setString(3, customerNr);
             pstmt.executeUpdate();
+
             showAlert(Alert.AlertType.INFORMATION, "Erfolg!", null, "Kunden erstellt!");
-            if (showAndWait() == ButtonType.OK)
-                App.setRoot("menu");
         } catch (SQLException e) {
             String errorMessage = e.getErrorCode() == 19 ? "Ein Kunde mit dieser ID existiert bereits!"
                     : "Unbekannter Fehler!";
@@ -104,16 +106,13 @@ public class NewCustomerController {
         }
     }
 
-    private void showAlert(Alert.AlertType alertType, String title, String headerText, String contentText) {
+    private void showAlert(Alert.AlertType alertType, String title, String headerText, String contentText) throws IOException {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         alert.setContentText(contentText);
-        alert.showAndWait();
+        Optional<ButtonType> rs = alert.showAndWait();
+        if ( rs.get() == ButtonType.OK && alertType == AlertType.INFORMATION) // REPAIR
+            App.setRoot("menu");
     }
-
-    private ButtonType showAndWait() {
-        return new Alert(Alert.AlertType.NONE).showAndWait().get();
-    }
-
 }
