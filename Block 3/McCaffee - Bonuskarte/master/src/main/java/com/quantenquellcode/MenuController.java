@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import com.quantenquellcode.Database.DatabaseConnection;
-
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
@@ -20,30 +19,34 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.AnchorPane;
 
 class Customer {
     String id;
-    String firstName;
-    String secondName;
+    String firstname;
+    String lastname;
 
-    public Customer(String id, String firstName, String secondName) {
+    public Customer(String id, String firstname, String lastname) {
         this.id = id;
-        this.firstName = firstName;
-        this.secondName = secondName;
+        this.firstname = firstname;
+        this.lastname = lastname;
     }
 
     @Override
     public String toString() {
-        return "ID: " + this.id + " firstName: " + this.firstName + " secondName: " + this.secondName;
+        return "ID: " + this.id + " firstName: " + this.firstname + " secondName: " + this.lastname;
     }
 }
 
@@ -102,16 +105,6 @@ class Product {
 }
 
 public class MenuController implements Initializable {
-
-    // @FXML
-    // private Button newKdnBtn;
-    // @FXML
-    // private Button kdnApplyBtn;
-    // @FXML
-    // private AnchorPane anchorPane;
-    // @FXML
-    // private TextField customerIdField;
-
     @FXML
     private AnchorPane coffeeAnchor;
     @FXML
@@ -127,16 +120,27 @@ public class MenuController implements Initializable {
     @FXML
     private AnchorPane dessertAnchor;
 
+    
     @FXML
     private TextField customeridField;
-
+    @FXML
+    private Button checkCustButton;
+    
     @FXML
     private Label priceLabel;
+    
+    @FXML
+    private AnchorPane upperMenu;
+    @FXML
+    private AnchorPane midMenu;
+    @FXML
+    private AnchorPane lowerMenu;
 
-    private static float totalPrice = 0.0f;
+    private float totalPrice = 0.0f;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        canUseAnchors(true);
         Map<String, List<Product>> productsByCategory = new HashMap<>();
         Map<String, AnchorPane> anchorsByCategory = new HashMap<>();
 
@@ -155,6 +159,11 @@ public class MenuController implements Initializable {
                 anchorsByCategory.get(category).getChildren().add(buttonBase);
             }
         }
+    }
+
+    private void canUseAnchors(Boolean turn){
+        midMenu.setMouseTransparent(turn);
+        lowerMenu.setMouseTransparent(turn);
     }
 
     private void updatePrice(float price) {
@@ -310,47 +319,133 @@ public class MenuController implements Initializable {
     private void logout() throws IOException {
         App.setRoot("login");
     }
-
     @FXML
     private void newCustomer() throws IOException, URISyntaxException {
         App.setRoot("newcustomer");
     }
 
-    // @FXML
-    // private void checkCustomer() throws IOException {
-    //     DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
-    //     String getUserSql = "";
-    //     List<Customer> customers = readCustomersDb();
-    //     // String inputId = customerIdField.getText().trim();
-    //     String inputId = "customerIdField.getText().trim();";
 
-    //     for (Customer customer : customers) {
-    //         if (customer.id.equals(inputId)) {
-    //             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    //             alert.setTitle("Gefunden!");
-    //             alert.setHeaderText(null);
-    //             alert.setContentText("Kunde: " + customer.firstName + " " +
-    //                     customer.secondName);
 
-    //             Optional<ButtonType> result = alert.showAndWait();
-    //             return;
-    //         }
-    //     }
-    //     ButtonType closeBtn = new ButtonType("Schließen", ButtonData.CANCEL_CLOSE);
-    //     ButtonType addButtonType = new ButtonType("Kunden erstellen",
-    //             ButtonData.NEXT_FORWARD);
-    //     Alert alert = new Alert(Alert.AlertType.ERROR, "", closeBtn, addButtonType);
-    //     alert.setTitle("Fehler!");
-    //     alert.setHeaderText(null);
-    //     alert.setContentText("Kunden nicht gefunden!");
+    ////////////////////////////
+    ///// Checking Customer/////
+    ////////////////////////////
 
-    //     Optional<ButtonType> result = alert.showAndWait();
+    @FXML
+    private void checkCustomer() throws IOException {
+        String inputId = customeridField.getText().trim();
+        Customer customer = fetchCustomer(inputId);
 
-    //     if (result.isPresent() && result.get() == addButtonType) {
-    //         App.setRoot("newcustomer");
-    //     }
+        customeridField.setStyle("");
+        boolean invalidInput = false;
+        if (inputId.length() == 0) {
+            customeridField.setStyle("-fx-text-box-border: red; -fx-focus-color: red;");
+            invalidInput = true;
+        }
+        if (invalidInput) {
+            return;
+        }
 
-    // }
+        if (customer != null) {
+            canUseAnchors(false);
+            displayCustomerFoundAlert(customer);
+            replaceCustomerIdFieldWithLabel(customer);
+        } else {
+            displayCustomerNotFoundAlert();
+        }
+    }
+
+    private Customer fetchCustomer(String customerId) {
+        DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
+        String getUserSql = "SELECT customerId, firstname, lastname FROM customers WHERE customerid = ?";
+
+        try (Connection connection = dbConnection.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(getUserSql)) {
+
+            pstmt.setString(1, customerId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new Customer(
+                        rs.getString("customerId"),
+                        rs.getString("firstname"),
+                        rs.getString("lastname"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return null;
+    }
+
+    private void replaceCustomerIdFieldWithLabel(Customer customer) {
+        Label label = new Label(customer.firstname + " " + customer.lastname);
+        label.setStyle("-fx-font: 24 arial;");
+        label.setLayoutX(customeridField.getLayoutX());
+        label.setLayoutY(customeridField.getLayoutY());
+
+        upperMenu.getChildren().set(upperMenu.getChildren().indexOf(customeridField), label);
+
+        
+        checkCustButton.setText("Neuer Kunde");
+        checkCustButton.setOnAction(event -> {
+            priceLabel.setText("Preis: 0€");
+            checkCustButton.setText("Kundennummer bestätigen");
+            checkCustButton.setOnAction(e -> {
+                try {
+                    checkCustomer();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            });
+            customeridField.clear();
+            upperMenu.getChildren().set(upperMenu.getChildren().indexOf(label), customeridField);
+            canUseAnchors(true);
+        });
+    }
+
+    
+    private void displayCustomerFoundAlert(Customer customer) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Gefunden!");
+        alert.setHeaderText(null);
+        alert.setContentText("Kunde: " + customer.firstname + " " + customer.lastname);
+        alert.showAndWait();
+    }
+
+    private void displayCustomerNotFoundAlert() throws IOException {
+        ButtonType closeBtn = new ButtonType("Schließen", ButtonData.CANCEL_CLOSE);
+        ButtonType addButtonType = new ButtonType("Kunden erstellen", ButtonData.NEXT_FORWARD);
+
+        Alert alert = new Alert(Alert.AlertType.ERROR, "", closeBtn, addButtonType);
+        alert.setTitle("Fehler!");
+        alert.setHeaderText(null);
+        alert.setContentText("Kunden nicht gefunden!");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == addButtonType) {
+            App.setRoot("newcustomer");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // List<Product> productList = yuseinFunc();
     // List<Product> coffeeList = productList.stream().filter(c ->
