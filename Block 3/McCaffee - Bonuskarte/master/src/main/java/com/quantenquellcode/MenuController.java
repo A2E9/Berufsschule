@@ -1,15 +1,18 @@
 package com.quantenquellcode;
 
+import java.io.Console;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import com.quantenquellcode.Database.DatabaseConnection;
 
@@ -20,17 +23,98 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.scene.text.TextAlignment;
+
+class Customer {
+    String id;
+    String firstName;
+    String secondName;
+
+    public Customer(String id, String firstName, String secondName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.secondName = secondName;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + this.id + " firstName: " + this.firstName + " secondName: " + this.secondName;
+    }
+}
+
+class Product {
+
+    String name;
+    float small;
+    float mid;
+    float big;
+    float universal;
+    String category;
+
+    public Product(String name) {
+        this.name = name;
+    }
+
+    public Product(String name, float universal) {
+        this.name = name;
+        this.universal = universal;
+    }
+
+    public Product(String name, float small, float mid, float big, float universal, String category) {
+        this.name = name;
+        this.small = small;
+        this.mid = mid;
+        this.big = big;
+        this.universal = universal;
+        this.category = category;
+    }
+
+    public void setSmallPrice(float small) {
+        this.small = small;
+    }
+
+    public void setMidPrice(float mid) {
+        this.mid = mid;
+    }
+
+    public void setBigPrice(float big) {
+        this.big = big;
+    }
+
+    public void setUniversalPrice(float universal) {
+        this.universal = universal;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    @Override
+    public String toString() {
+        return "Category " + this.category + " name: " + this.name + " small: " + this.small + " mid: " + this.mid
+                + " big: " + this.big + " universal " + this.universal + "\n";
+    }
+}
 
 public class MenuController implements Initializable {
 
@@ -44,15 +128,123 @@ public class MenuController implements Initializable {
     // private TextField customerIdField;
 
     @FXML
-    private MenuButton menubtn;
+    private AnchorPane coffeeAnchor;
+    @FXML
+    private AnchorPane gebaeckAnchor;
+    @FXML
+    private AnchorPane frappesAnchor;
+    @FXML
+    private AnchorPane icedrinkAnchor;
+    @FXML
+    private AnchorPane vitalAnchor;
+    @FXML
+    private AnchorPane kaltgetraenkAnchor;
+    @FXML
+    private AnchorPane dessertAnchor;
+
+    @FXML
+    private Label priceLabel;
+
+    private static float totalPrice = 0.0f;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Map<String, List<Product>> productsByCategory = new HashMap<>();
+        Map<String, AnchorPane> anchorsByCategory = new HashMap<>();
+
+        anchorsByCategory.put("coffee", coffeeAnchor);
+        anchorsByCategory.put("gebaeck", gebaeckAnchor);
+        anchorsByCategory.put("frappes", frappesAnchor);
+        anchorsByCategory.put("iceDrink", icedrinkAnchor);
+        anchorsByCategory.put("vital", vitalAnchor);
+        anchorsByCategory.put("kaltgetraenk", kaltgetraenkAnchor);
+        anchorsByCategory.put("dessert", dessertAnchor);
 
         for (String category : fetchCategories()) {
             productsByCategory.put(category, readProductsByCategory(category));
+
+            for (ButtonBase buttonBase : displayButtons(productsByCategory.get(category)).getItems()) {
+                anchorsByCategory.get(category).getChildren().add(buttonBase);
+            }
         }
+    }
+
+    private void updatePrice(float price) {
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        totalPrice += price;
+        priceLabel.setText("Preis: "+df.format(totalPrice)+ "€");
+    }
+
+    private ListView<ButtonBase> displayButtons(List<Product> products) {
+        ListView<ButtonBase> listView = new ListView<>();
+        double startX = 30.0;
+        double startY = 30.0;
+        double gapX = 210.0;
+        double gapY = 80.0;
+        int buttonsPerRow = 3;
+
+        for (int i = 0; i < products.size(); i++) {
+            Product caffee = products.get(i);
+            int row = i / buttonsPerRow;
+            int col = i % buttonsPerRow;
+
+            ButtonBase btn = new ButtonBase() {
+                @Override
+                public void fire() {
+                    throw new UnsupportedOperationException("Unimplemented method 'fire'");
+                }
+            };
+
+            if (caffee.universal == 0.0) {
+                MenuButton menuBtn = new MenuButton(caffee.name);
+
+                menuBtn.popupSideProperty().set(Side.RIGHT);
+                if (caffee.small != 0.0) {
+                    MenuItem smallItem = new MenuItem("Klein");
+                    smallItem.setOnAction(event -> {
+                        System.out.println("Price: " + caffee.small);
+                        updatePrice(caffee.small);
+                    });
+                    menuBtn.getItems().add(smallItem);
+                }
+                if (caffee.mid != 0.0) {
+                    MenuItem midItem = new MenuItem("Mittel");
+                    midItem.setOnAction(event -> {
+                        System.out.println("Price: " + caffee.mid);
+                        updatePrice(caffee.mid);
+                    });
+                    menuBtn.getItems().add(midItem);
+                }
+                if (caffee.big != 0.0) {
+                    MenuItem bigItem = new MenuItem("Groß");
+                    bigItem.setOnAction(event -> {
+                        System.out.println("Price: " + caffee.big);
+                        updatePrice(caffee.big);
+                    });
+                    menuBtn.getItems().add(bigItem);
+                }
+                btn = menuBtn;
+            } else {
+                Button button = new Button(caffee.name);
+                button.setOnAction((e) -> {
+                    System.out.println("Price: " + caffee.universal);
+                    updatePrice(caffee.universal);
+                });
+                btn = button;
+            }
+
+            btn.setPrefHeight(40.0);
+            btn.setPrefWidth(130.0);
+            btn.setContentDisplay(ContentDisplay.CENTER);
+            btn.setAlignment(Pos.CENTER);
+            btn.setLayoutX(startX + col * gapX);
+            btn.setLayoutY(startY + row * gapY);
+            btn.getStyleClass().add("defButton");
+
+            listView.getItems().add(btn);
+        }
+        return listView;
     }
 
     private List<String> fetchCategories() {
@@ -125,43 +317,6 @@ public class MenuController implements Initializable {
         return null;
     }
 
-   
-
-    private void displayButtons(List<Product> caffeeList) {
-        double startX = 40.0; // Start position X
-        double startY = 100.0; // Start position Y
-        double gapX = 212.0; // Gap between each button horizontally
-        double gapY = 104.0; // Gap between each button vertically
-        int buttonsPerRow = 4; // Number of buttons per row
-
-        for (int i = 0; i < caffeeList.size(); i++) {
-            Product caffee = caffeeList.get(i);
-
-            // Calculate the row and column based on the index
-            int row = i / buttonsPerRow;
-            int col = i % buttonsPerRow;
-
-            Button btn = new Button(caffee.name);
-            btn.setPrefHeight(70.0);
-            btn.setPrefWidth(140.0);
-            btn.setTextAlignment(TextAlignment.CENTER);
-            btn.setLayoutX(startX + col * gapX);
-            btn.setLayoutY(startY + row * gapY);
-
-            btn.setOnAction(event -> {
-                // Handle button click here
-            });
-
-            // anchorPane.getChildren().add(btn);
-        }
-    }
-
-
-
-
-
-
-    
     @FXML
     private void logout() throws IOException {
         App.setRoot("login");
@@ -205,67 +360,58 @@ public class MenuController implements Initializable {
 
     // }
 
-}
+    // List<Product> productList = yuseinFunc();
+    // List<Product> coffeeList = productList.stream().filter(c ->
+    // c.getCategory().equals("coffee")).collect(Collectors.toList());
+    // private List<Product> yuseinFunc() throws SQLException {
+    // DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
+    // String getUserSql = "SELECT DISTINCT "
+    // + "name, "
+    // + "category, "
+    // + "COALESCE((SELECT CASE WHEN price = NULL THEN 0 ELSE price END FROM prices
+    // WHERE size = 'small' AND products.id = prices.product_id), 0) || ',' || "
+    // + "COALESCE((SELECT CASE WHEN price = NULL THEN 0 ELSE price END FROM prices
+    // WHERE size = 'mid' AND products.id = prices.product_id), 0) || ',' || "
+    // + "COALESCE((SELECT CASE WHEN price = NULL THEN 0 ELSE price END FROM prices
+    // WHERE size = 'big' AND products.id = prices.product_id), 0) || ',' || "
+    // + "COALESCE((SELECT CASE WHEN price = NULL THEN 0 ELSE price END FROM prices
+    // WHERE size = 'universal' AND products.id = prices.product_id), 0) AS
+    // price_size "
+    // + "FROM "
+    // + "products "
+    // + "INNER JOIN prices ON products.id = prices.product_id ";
 
-class Customer {
-    String id;
-    String firstName;
-    String secondName;
+    // List<Product> prList = new ArrayList<Product>();
 
-    public Customer(String id, String firstName, String secondName) {
-        this.id = id;
-        this.firstName = firstName;
-        this.secondName = secondName;
-    }
+    // try (Connection connection = dbConnection.getConnection();
+    // PreparedStatement pstmt = connection.prepareStatement(getUserSql)) {
 
-    @Override
-    public String toString() {
-        return "ID: " + this.id + " firstName: " + this.firstName + " secondName: " + this.secondName;
-    }
-}
+    // ResultSet rs = pstmt.executeQuery();
 
-class Product {
+    // String[] result = {};
 
-    String name;
-    float small;
-    float mid;
-    float big;
-    float universal;
+    // while (rs.next()) {
+    // String name = rs.getString("name");
+    // String category = rs.getString("category");
+    // String price_size = rs.getString("price_size");
 
-    public Product(String name) {
-        this.name = name;
-    }
+    // result = price_size.split(",");
 
-    public Product(String name, float universal) {
-        this.name = name;
-        this.universal = universal;
-    }
+    // float small = Float.parseFloat(result[0]);
+    // float mid = Float.parseFloat(result[1]);
+    // float big = Float.parseFloat(result[2]);
+    // float universal = Float.parseFloat(result[3]);
 
-    public Product(String name, float small, float mid, float big) {
-        this.name = name;
-        this.small = small;
-        this.mid = mid;
-        this.big = big;
-    }
+    // Product pr = new Product(name, small, mid, big, universal, category);
+    // prList.add(pr);
+    // }
 
-    public void setSmallPrice(float small) {
-        this.small = small;
-    }
+    // return prList;
+    // } catch(SQLException e) {
 
-    public void setMidPrice(float mid) {
-        this.mid = mid;
-    }
+    // }
 
-    public void setBigPrice(float big) {
-        this.big = big;
-    }
+    // return null;
+    // }
 
-    public void setUniversalPrice(float universal) {
-        this.universal = universal;
-    }
-
-    @Override
-    public String toString() {
-        return "Name: " + this.name + "\nsmall: " + this.small + "\nmid: " + this.mid + "\nbig: " + this.big + "\n";
-    }
 }
