@@ -13,10 +13,10 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="1027.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.quantenquellcode.MenuController">
    <children>
-      <AnchorPane prefHeight="75.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
+      <AnchorPane fx:id="upperMenu" prefHeight="75.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
          <children>
-            <Button layoutX="381.0" layoutY="25.0" mnemonicParsing="false" text="Kundennummer bestätigen" />
-            <TextField fx:id="customerIdField" layoutX="121.0" layoutY="25.0" prefHeight="26.0" prefWidth="245.0" />
+            <Button fx:id="checkCustButton" layoutX="381.0" layoutY="25.0" mnemonicParsing="false" onAction="#checkCustomer" text="Kundennummer bestätigen" />
+            <TextField fx:id="customeridField" layoutX="121.0" layoutY="25.0" prefHeight="26.0" prefWidth="245.0" />
             <ImageView fitHeight="70.0" fitWidth="70.0" layoutX="39.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@pics/Coffee%20Icon.png" />
