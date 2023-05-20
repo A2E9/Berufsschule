@@ -1,15 +1,10 @@
 package com.quantenquellcode;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Optional;
-
 import com.quantenquellcode.Database.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javafx.fxml.FXML;
