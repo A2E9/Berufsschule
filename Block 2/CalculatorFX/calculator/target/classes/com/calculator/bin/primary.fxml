@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="265.0" prefWidth="351.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.calculator.bin.PrimaryController">
+   <children>
+      <Label alignment="CENTER" graphicTextGap="5.0" lineSpacing="13.0" prefHeight="21.0" prefWidth="122.0" text="CALCULATOR" textAlignment="CENTER">
+         <font>
+            <Font name="Stencil" size="16.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Label>
+      <HBox alignment="CENTER" maxHeight="108.0" maxWidth="326.0" minHeight="0.0" minWidth="0.0" prefHeight="26.0" prefWidth="326.0">
+         <children>
+            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="26.0" prefWidth="90.0" text="DEC TO BIN">
+               <HBox.margin>
+                  <Insets right="13.0" />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="decInput" alignment="TOP_LEFT" maxHeight="25.0" maxWidth="122.0" nodeOrientation="LEFT_TO_RIGHT" onKeyTyped="#resetBarCheck" pickOnBounds="false" prefColumnCount="0" prefHeight="25.0" prefWidth="97.0" />
+            <Button alignment="TOP_LEFT" contentDisplay="RIGHT" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#posOrNeg" prefHeight="25.0" prefWidth="61.0" text="Convert">
+               <HBox.margin>
+                  <Insets left="13.0" />
+               </HBox.margin>
+            </Button>
+            <ProgressIndicator fx:id="progressDec" prefHeight="26.0" prefWidth="39.0" progress="0.0">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </ProgressIndicator>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" maxHeight="108.0" maxWidth="326.0" minHeight="0.0" minWidth="0.0" prefHeight="26.0" prefWidth="326.0">
+         <children>
+            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="26.0" prefWidth="90.0" text="BIN TO DEC">
+               <HBox.margin>
+                  <Insets right="13.0" />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="binInput" alignment="TOP_LEFT" maxHeight="25.0" maxWidth="122.0" nodeOrientation="LEFT_TO_RIGHT" onKeyTyped="#resetBarCheck" pickOnBounds="false" prefColumnCount="0" prefHeight="25.0" prefWidth="97.0" />
+            <Button alignment="TOP_LEFT" contentDisplay="RIGHT" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#binToDec" prefHeight="25.0" prefWidth="61.0" text="Convert">
+               <HBox.margin>
+                  <Insets left="13.0" />
+               </HBox.margin>
+            </Button>
+            <ProgressIndicator fx:id="progressBin" prefHeight="26.0" prefWidth="39.0" progress="0.0">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </ProgressIndicator>
+         </children>
+      </HBox>
+      <ProgressBar fx:id="resetBar" prefWidth="200.0" progress="0.0" />
+      <Button mnemonicParsing="false" onAction="#resetFields" prefHeight="25.0" prefWidth="261.0" text="Reset" textAlignment="CENTER" />
+      <Button fx:id="primaryButton" onAction="#switchToSecondary" text="Switch to Secondary View" />
+   </children>
+   <padding>
+      <Insets left="20.0" right="20.0" />
+   </padding>
+</VBox>

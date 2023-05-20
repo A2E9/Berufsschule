@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" prefHeight="235.0" prefWidth="496.0" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.calculator.bin.HomeController">
+   <children>
+      <ProgressBar fx:id="progressHome1" prefHeight="21.0" prefWidth="496.0" progress="0.0" />
+      <PasswordField fx:id="pwdField" alignment="CENTER" maxHeight="28.0" maxWidth="125.0" minHeight="20.0" minWidth="50.0" onKeyPressed="#submitPw" opacity="0.22" prefColumnCount="0" prefHeight="20.0" prefWidth="125.0">
+         <cursor>
+            <Cursor fx:constant="NONE" />
+         </cursor>
+         <effect>
+            <Blend />
+         </effect>
+      </PasswordField>
+      <Button fx:id="loginBtn" maxHeight="20.0" minHeight="20.0" mnemonicParsing="false" onAction="#verifyPwd" prefHeight="20.0" prefWidth="124.0" textAlignment="CENTER" />
+      <ProgressBar fx:id="progressHome2" layoutX="10.0" layoutY="77.0" prefHeight="21.0" prefWidth="496.0" progress="1.0" />
+   </children>
+   <effect>
+      <Glow />
+   </effect>
+</VBox>
