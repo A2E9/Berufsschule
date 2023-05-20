@@ -26,9 +26,9 @@
             <Button layoutX="555.0" layoutY="45.0" mnemonicParsing="false" onAction="#logout" prefHeight="25.0" prefWidth="71.0" styleClass="cancelButton" text="Abmelden" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutY="86.0" prefHeight="449.0" prefWidth="1177.0">
+      <AnchorPane fx:id="midMenu" layoutY="86.0" prefHeight="449.0" prefWidth="1177.0">
          <children>
-            <TabPane prefHeight="320.0" prefWidth="640.0" style="-fx-background-color: #92a8D1; -fx-border-color: #92a8D1;" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="productsPane" prefHeight="320.0" prefWidth="640.0" style="-fx-background-color: #92a8D1; -fx-border-color: #92a8D1;" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab fx:id="coffeeTab" style="-fx-background-color: #92a8D1;" text="Coffee &amp; More">
                      <content>
@@ -106,7 +106,7 @@
             <ListView layoutX="673.0" layoutY="33.0" prefHeight="200.0" prefWidth="200.0" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutY="405.0" prefHeight="75.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
+      <AnchorPane fx:id="lowerMenu" layoutY="405.0" prefHeight="75.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
          <children>
             <ImageView fitHeight="75.0" fitWidth="150.0" layoutX="497.0" pickOnBounds="true" preserveRatio="true">
                <image>

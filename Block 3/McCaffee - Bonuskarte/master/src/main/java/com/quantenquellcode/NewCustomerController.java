@@ -1,8 +1,6 @@
 package com.quantenquellcode;
 
 import java.io.IOException;
-import com.quantenquellcode.Database.DatabaseConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

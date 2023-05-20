@@ -1,4 +1,4 @@
-package com.quantenquellcode.Database;
+package com.quantenquellcode;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
