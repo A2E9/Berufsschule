@@ -5,6 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
 
+import com.quantenquellcode.Database.DatabaseConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -27,23 +34,23 @@ public class NewCustomerController {
         customerIdField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 customerIdField.setText(newValue.replaceAll("[^\\d]", ""));
-            }else if (newValue.length() > 10) {
+            } else if (newValue.length() > 10) {
                 customerIdField.setText(oldValue);
             }
         });
-    
+
         firstnameField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("[a-zA-Z]*")) {
                 firstnameField.setText(newValue.replaceAll("[^a-zA-Z]", ""));
-            }else if (newValue.length() > 10) {
+            } else if (newValue.length() > 10) {
                 firstnameField.setText(oldValue);
             }
         });
-    
+
         secondnameField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("[a-zA-Z]*")) {
                 secondnameField.setText(newValue.replaceAll("[^a-zA-Z]", ""));
-            }else if (newValue.length() > 10) {
+            } else if (newValue.length() > 10) {
                 secondnameField.setText(oldValue);
             }
         });
@@ -59,11 +66,11 @@ public class NewCustomerController {
         String customerNr = customerIdField.getText();
         String firstname = firstnameField.getText();
         String secondname = secondnameField.getText();
-    
+
         customerIdField.setStyle("");
         firstnameField.setStyle("");
         secondnameField.setStyle("");
-    
+
         // Check if any of the fields are too short
         boolean invalidInput = false;
         if (customerNr == null || customerNr.length() < 4) {
@@ -78,29 +85,40 @@ public class NewCustomerController {
             secondnameField.setStyle("-fx-text-box-border: red; -fx-focus-color: red;");
             invalidInput = true;
         }
-    
+
         if (invalidInput) {
             return;
         }
+        DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
+        String insertCustomerSql = "INSERT INTO customers (firstname, lastName, customerId) VALUES (?,?,?)";
 
-        String newCustomerLine = customerNr + ";" + firstname + ";" + secondname + "\n";
-    
-        File file = new File("kunden_liste.db");
-        if(!file.exists()){
-            file.createNewFile();
+        try (Connection connection = dbConnection.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(insertCustomerSql)) {
+            pstmt.setString(1, firstname);
+            pstmt.setString(2, secondname);
+            pstmt.setString(3, customerNr);
+            pstmt.executeUpdate();
+            showAlert(Alert.AlertType.INFORMATION, "Erfolg!", null, "Kunden erstellt!");
+            if (showAndWait() == ButtonType.OK)
+                App.setRoot("menu");
+        } catch (SQLException e) {
+            String errorMessage = e.getErrorCode() == 19 ? "Ein Kunde mit dieser ID existiert bereits!"
+                    : "Unbekannter Fehler!";
+            showAlert(Alert.AlertType.ERROR, "Fehler!", null, errorMessage);
+            System.out.println(e.getSQLState());
         }
-    
-        try (FileWriter writer = new FileWriter(file, true)) { 
-            writer.write(newCustomerLine);
-        }
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Erfolg!");
-        alert.setHeaderText(null);
-        alert.setContentText("Kunden erstellt!");
-    
-        Optional<ButtonType> result = alert.showAndWait();
-        if(result.get() == ButtonType.OK) App.setRoot("menu");
     }
-    
+
+    private void showAlert(Alert.AlertType alertType, String title, String headerText, String contentText) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
+    }
+
+    private ButtonType showAndWait() {
+        return new Alert(Alert.AlertType.NONE).showAndWait().get();
+    }
+
 }
