@@ -17,8 +17,11 @@ import java.text.DecimalFormat;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.geometry.VPos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
@@ -28,10 +31,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
 
 class Customer {
     String id;
@@ -106,29 +113,20 @@ class Product {
 
 public class MenuController implements Initializable {
     @FXML
-    private AnchorPane coffeeAnchor;
-    @FXML
-    private AnchorPane gebaeckAnchor;
-    @FXML
-    private AnchorPane frappesAnchor;
+    private AnchorPane kaltgetraenkAnchor;
     @FXML
     private AnchorPane icedrinkAnchor;
     @FXML
-    private AnchorPane vitalAnchor;
-    @FXML
-    private AnchorPane kaltgetraenkAnchor;
+    private AnchorPane gebaeckAnchor;
     @FXML
     private AnchorPane dessertAnchor;
+    @FXML
+    private AnchorPane frappesAnchor;
+    @FXML
+    private AnchorPane coffeeAnchor;
+    @FXML
+    private AnchorPane vitalAnchor;
 
-    
-    @FXML
-    private TextField customeridField;
-    @FXML
-    private Button checkCustButton;
-    
-    @FXML
-    private Label priceLabel;
-    
     @FXML
     private AnchorPane upperMenu;
     @FXML
@@ -136,10 +134,23 @@ public class MenuController implements Initializable {
     @FXML
     private AnchorPane lowerMenu;
 
+    @FXML
+    private TextField customerField;
+    @FXML
+    private Button checkCustButton;
+
+    @FXML
+    private Label priceLabel;
+
     private float totalPrice = 0.0f;
+
+    private Stage bonuStage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        //Display menu Items
+        
         canUseAnchors(true);
         Map<String, List<Product>> productsByCategory = new HashMap<>();
         Map<String, AnchorPane> anchorsByCategory = new HashMap<>();
@@ -161,7 +172,12 @@ public class MenuController implements Initializable {
         }
     }
 
-    private void canUseAnchors(Boolean turn){
+    
+    ///////////////////////
+    //// Visual Change ////
+    ///////////////////////
+   
+    private void canUseAnchors(Boolean turn) {
         midMenu.setMouseTransparent(turn);
         lowerMenu.setMouseTransparent(turn);
     }
@@ -245,6 +261,57 @@ public class MenuController implements Initializable {
         return listView;
     }
 
+    private void displayBonusCard() {
+        GridPane grid = new GridPane();
+        ImageView[] coffees = new ImageView[10];
+
+        Image coffeeImage = new Image(getClass().getResource("pics/caffe_cup.png").toString());
+
+        for (int i = 0; i < 10; i++) {
+
+            //pray for chatgpt
+            coffees[i] = new ImageView(coffeeImage);
+            coffees[i].setFitWidth(75); // Set the width of the ImageView
+            coffees[i].setFitHeight(75);
+            int row = i / 5; // Calculate the row index: 0 for the first 5 images, 1 for the next 5
+            int col = i % 5; // Calculate the column index: 0-4 for the first row, 0-4 for the second row
+
+            grid.add(coffees[i], col, row);
+
+            GridPane.setHalignment(coffees[i], HPos.CENTER);
+            GridPane.setValignment(coffees[i], VPos.CENTER);
+
+            // Make the cell grow to fill the available space
+            GridPane.setHgrow(coffees[i], Priority.ALWAYS);
+            GridPane.setVgrow(coffees[i], Priority.ALWAYS);
+
+        }
+
+        grid.setStyle("-fx-background-color:  #5a2f28");
+        Stage stage = new Stage();
+        Scene scene = new Scene(grid);
+
+        stage.setScene(scene);
+        stage.setTitle("Bonus Card");
+
+        double mainX = App.stage.getX();
+        double mainY = App.stage.getY();
+
+        stage.setX(mainX + App.stage.getWidth());
+        stage.setY(mainY);
+
+        stage.show();
+        bonuStage = stage;
+
+        App.stage.setOnCloseRequest(event -> {
+            bonuStage.close();
+        });
+    }
+
+    ///////////////////////
+    //// Database Data ////
+    ///////////////////////
+
     private List<String> fetchCategories() {
         DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
         String getCategoriesSql = "SELECT DISTINCT category FROM products";
@@ -315,30 +382,33 @@ public class MenuController implements Initializable {
         return null;
     }
 
+    /////////////////////
+    //// Switch View ////
+    /////////////////////
+
     @FXML
     private void logout() throws IOException {
         App.setRoot("login");
     }
+
     @FXML
     private void newCustomer() throws IOException, URISyntaxException {
         App.setRoot("newcustomer");
     }
 
-
-
-    ////////////////////////////
-    ///// Checking Customer/////
-    ////////////////////////////
+    ////////////////////////
+    //// Customer Check ////
+    ////////////////////////
 
     @FXML
     private void checkCustomer() throws IOException {
-        String inputId = customeridField.getText().trim();
+        String inputId = customerField.getText().trim();
         Customer customer = fetchCustomer(inputId);
 
-        customeridField.setStyle("");
+        customerField.setStyle("");
         boolean invalidInput = false;
         if (inputId.length() == 0) {
-            customeridField.setStyle("-fx-text-box-border: red; -fx-focus-color: red;");
+            customerField.setStyle("-fx-text-box-border: red; -fx-focus-color: red;");
             invalidInput = true;
         }
         if (invalidInput) {
@@ -349,6 +419,7 @@ public class MenuController implements Initializable {
             canUseAnchors(false);
             displayCustomerFoundAlert(customer);
             replaceCustomerIdFieldWithLabel(customer);
+            displayBonusCard();
         } else {
             displayCustomerNotFoundAlert();
         }
@@ -380,12 +451,11 @@ public class MenuController implements Initializable {
     private void replaceCustomerIdFieldWithLabel(Customer customer) {
         Label label = new Label(customer.firstname + " " + customer.lastname);
         label.setStyle("-fx-font: 24 arial;");
-        label.setLayoutX(customeridField.getLayoutX());
-        label.setLayoutY(customeridField.getLayoutY());
+        label.setLayoutX(customerField.getLayoutX());
+        label.setLayoutY(customerField.getLayoutY());
 
-        upperMenu.getChildren().set(upperMenu.getChildren().indexOf(customeridField), label);
+        upperMenu.getChildren().set(upperMenu.getChildren().indexOf(customerField), label);
 
-        
         checkCustButton.setText("Neuer Kunde");
         checkCustButton.setOnAction(event -> {
             priceLabel.setText("Preis: 0€");
@@ -397,13 +467,13 @@ public class MenuController implements Initializable {
                     e1.printStackTrace();
                 }
             });
-            customeridField.clear();
-            upperMenu.getChildren().set(upperMenu.getChildren().indexOf(label), customeridField);
+            customerField.clear();
+            upperMenu.getChildren().set(upperMenu.getChildren().indexOf(label), customerField);
             canUseAnchors(true);
+            bonuStage.close();
         });
     }
 
-    
     private void displayCustomerFoundAlert(Customer customer) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Gefunden!");
@@ -427,25 +497,6 @@ public class MenuController implements Initializable {
             App.setRoot("newcustomer");
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // List<Product> productList = yuseinFunc();
     // List<Product> coffeeList = productList.stream().filter(c ->

@@ -14,7 +14,7 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
-    private static Stage stage;
+    public static Stage stage;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -26,9 +26,7 @@ public class App extends Application {
 
         DatabaseUtils.createNewTable();
     }
-
     
-
     static void setRoot(String fxml) throws IOException {
         Parent root = loadFXML(fxml);
         scene.setRoot(root);
