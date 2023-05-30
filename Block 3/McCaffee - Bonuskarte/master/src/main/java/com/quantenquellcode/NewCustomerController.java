@@ -86,14 +86,23 @@ public class NewCustomerController {
             return;
         }
         DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
-        String insertCustomerSql = "INSERT INTO customers (firstname, lastName, customerId) VALUES (?,?,?)";
 
-        try (Connection connection = dbConnection.getConnection();
-                PreparedStatement pstmt = connection.prepareStatement(insertCustomerSql)) {
+        String insertCustomerSql = "INSERT INTO customers (firstname, lastName, customerId) VALUES (?,?,?); ";
+        String insertBonusSql = "INSERT INTO bonus (customer_id, count) VALUES "
+                + "((SELECT id from customers WHERE customerId=?), 0);";
+
+        try (Connection connection = dbConnection.getConnection();) {
+            PreparedStatement pstmt = connection.prepareStatement(insertCustomerSql);
             pstmt.setString(1, firstname);
             pstmt.setString(2, secondname);
             pstmt.setString(3, customerNr);
             pstmt.executeUpdate();
+            
+            PreparedStatement pstmt2 = connection.prepareStatement(insertBonusSql);
+            pstmt2.setString(1, customerNr);
+            pstmt2.executeUpdate();
+            
+
 
             showAlert(Alert.AlertType.INFORMATION, "Erfolg!", null, "Kunden erstellt!");
         } catch (SQLException e) {
@@ -104,13 +113,14 @@ public class NewCustomerController {
         }
     }
 
-    private void showAlert(Alert.AlertType alertType, String title, String headerText, String contentText) throws IOException {
+    private void showAlert(Alert.AlertType alertType, String title, String headerText, String contentText)
+            throws IOException {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         alert.setContentText(contentText);
         Optional<ButtonType> rs = alert.showAndWait();
-        if ( rs.get() == ButtonType.OK && alertType == AlertType.INFORMATION) // REPAIR
+        if (rs.get() == ButtonType.OK && alertType == AlertType.INFORMATION) // REPAIR
             App.setRoot("menu");
     }
 }

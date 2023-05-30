@@ -2,11 +2,15 @@ package com.quantenquellcode;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Scanner;
+import java.util.Set;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
@@ -15,6 +19,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
@@ -28,6 +34,7 @@ import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -35,10 +42,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 class Customer {
     String id;
@@ -65,6 +76,8 @@ class Product {
     float big;
     float universal;
     String category;
+
+    public int count = 1;
 
     public Product(String name) {
         this.name = name;
@@ -98,6 +111,10 @@ class Product {
 
     public void setUniversalPrice(float universal) {
         this.universal = universal;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getCategory() {
@@ -146,11 +163,19 @@ public class MenuController implements Initializable {
 
     private Stage bonuStage;
 
+    private Stage shopListStage;
+
+    private ListView<String> shopListView;
+
+    private List<Product> shopProducts;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        shopProducts = new ArrayList<>();
+        shopListView = new ListView<String>();
+        TEST_BONUS();
+        // Display menu Items
 
-        //Display menu Items
-        
         canUseAnchors(true);
         Map<String, List<Product>> productsByCategory = new HashMap<>();
         Map<String, AnchorPane> anchorsByCategory = new HashMap<>();
@@ -172,21 +197,81 @@ public class MenuController implements Initializable {
         }
     }
 
-    
+    @FXML
+    private void submitCustomer(KeyEvent event) throws IOException {
+        if (event.getCode() == KeyCode.ENTER) {
+            checkCustomer();
+        }
+    }
+
+    private void TEST_BONUS() {
+
+        List<String> ls = new ArrayList<>();
+        ls.add("Caffe 1");
+        ls.add("Caffe 2");
+        ls.add("Caffe 3"); // Free
+        ls.add("Caffe 4");
+        ls.add("Caffe 5");
+        ls.add("Caffe 6"); // Free
+        ls.add("Caffe 7");
+        ls.add("Caffe 8"); // Free
+        ls.add("Caffe 9");
+        ls.add("Caffe 10");
+
+        // Add CaffeeBonus +1
+        // if cafebonus== 3
+        // getBestellung niedrigester Preis (Minus betrag)
+
+    }
+
     ///////////////////////
     //// Visual Change ////
     ///////////////////////
-   
+
     private void canUseAnchors(Boolean turn) {
         midMenu.setMouseTransparent(turn);
         lowerMenu.setMouseTransparent(turn);
     }
 
-    private void updatePrice(float price) {
+    private void updatePrice(){
+
+    }
+    private void updatePrice(String label, float price) { // pass full string of data
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
         totalPrice += price;
-        priceLabel.setText("Preis: " + df.format(totalPrice) + "€");
+        float pricce = 0.0f;
+        for (Product product : shopProducts) {
+            pricce += price * product.count;
+        }
+        priceLabel.setText("Preis: " + df.format(pricce) + "€");
+
+
+        // shopListView.getItems().add(productView);
+    }
+
+    private void addToShopList(Product product, String size) {
+        int prodIndex = shopProducts.size() - 1;
+        shopProducts.add(product);
+        String productView = product.name + ";" + size + ";" + prodIndex;
+        switch (size) {
+            case "klein":
+                updatePrice(productView,product.small);
+                break;
+            case "mittel":
+                updatePrice(productView,product.mid);
+                break;
+            case "groß":
+                updatePrice(productView,product.big);
+                break;
+
+            default:
+                updatePrice(productView,product.universal);
+                break;
+        }
+
+        
+
     }
 
     private ListView<ButtonBase> displayButtons(List<Product> products) {
@@ -209,7 +294,7 @@ public class MenuController implements Initializable {
                 }
             };
 
-            // TODO: refactor
+            // TODO: refactor REFACTOR
             if (caffee.universal == 0.0) {
                 MenuButton menuBtn = new MenuButton(caffee.name);
 
@@ -218,7 +303,8 @@ public class MenuController implements Initializable {
                     MenuItem smallItem = new MenuItem("Klein");
                     smallItem.setOnAction(event -> {
                         System.out.println("Price: " + caffee.small);
-                        updatePrice(caffee.small);
+                        // updatePrice(caffee.small); // refactor to addToShopList
+                        addToShopList(caffee, "klein");
                     });
                     menuBtn.getItems().add(smallItem);
                 }
@@ -226,7 +312,8 @@ public class MenuController implements Initializable {
                     MenuItem midItem = new MenuItem("Mittel");
                     midItem.setOnAction(event -> {
                         System.out.println("Price: " + caffee.mid);
-                        updatePrice(caffee.mid);
+                        // updatePrice(caffee.mid);
+                        addToShopList(caffee, "mittel");
                     });
                     menuBtn.getItems().add(midItem);
                 }
@@ -234,16 +321,18 @@ public class MenuController implements Initializable {
                     MenuItem bigItem = new MenuItem("Groß");
                     bigItem.setOnAction(event -> {
                         System.out.println("Price: " + caffee.big);
-                        updatePrice(caffee.big);
+                        // updatePrice(caffee.big);
+                        addToShopList(caffee, "groß");
                     });
                     menuBtn.getItems().add(bigItem);
                 }
                 btn = menuBtn;
             } else {
-                Button button = new Button(caffee.name);
+                Button button = new Button(caffee.name + "");
                 button.setOnAction((e) -> {
                     System.out.println("Price: " + caffee.universal);
-                    updatePrice(caffee.universal);
+                    // updatePrice(caffee.universal);
+                    addToShopList(caffee, "");
                 });
                 btn = button;
             }
@@ -269,7 +358,7 @@ public class MenuController implements Initializable {
 
         for (int i = 0; i < 10; i++) {
 
-            //pray for chatgpt
+            // pray for chatgpt
             coffees[i] = new ImageView(coffeeImage);
             coffees[i].setFitWidth(75); // Set the width of the ImageView
             coffees[i].setFitHeight(75);
@@ -305,7 +394,102 @@ public class MenuController implements Initializable {
 
         App.stage.setOnCloseRequest(event -> {
             bonuStage.close();
+            shopListStage.close();
         });
+
+        displayShopList();
+    }
+
+    private void displayShopList() {
+        shopListView.setMaxHeight(App.stage.getHeight() - bonuStage.getHeight() - 40);
+
+        shopListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                ListCell<String> cell = new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item != null) {
+
+                            String[] result = item.split(";");
+                            String labelname = result[0] + " " + result[1];
+                            int crrIndex = Integer.parseInt(result[2]);
+                            String countStr = Integer.toString(shopProducts.get(crrIndex).count);
+
+                            HBox box = new HBox();
+                            Label label = new Label(labelname);
+                            Label count = new Label(countStr);
+                            count.setMinHeight(25);
+                            label.setMinHeight(25);
+                            count.setAlignment(Pos.CENTER);
+                            label.setAlignment(Pos.CENTER);
+
+                            HBox.setHgrow(label, Priority.ALWAYS);
+
+                            Button plusbButton = new Button("+");
+                            Button minusButton = new Button("-");
+
+                            // button2.getStyleClass().add("shopButtons");
+                            minusButton.setStyle(
+                                    "-fx-background-color:none;");
+                            plusbButton.setStyle(
+                                    "-fx-background-color:none;");
+
+                            // button1.setStyle("-fx-padding: 2; -fx-background-color:none; "
+                            // + "-fx-border-style: solid inside;"
+                            // + "-fx-border-width: 1;"
+                            // + "-fx-border-insets: 5;"
+                            // + "-fx-border-radius: 5;"
+                            // + "-fx-border-color: blue;");
+                            
+                            DecimalFormat df = new DecimalFormat();
+                            df.setMaximumFractionDigits(2);
+
+
+                            plusbButton.setOnAction(event -> {
+                                System.out.println("Button 1 clicked for item " + crrIndex);
+                                shopProducts.get(crrIndex).count++;
+                                count.setText(String.valueOf(shopProducts.get(crrIndex).count));
+                            });
+                            minusButton.setOnAction(event -> {
+                                System.out.println("Count " + shopProducts.get(crrIndex).count);
+                                if (shopProducts.get(crrIndex).count <= 1) {
+                                    // shopListView.getItems().remove(getIndex());
+                                    shopListView.getItems().remove(crrIndex);
+                                } else {
+                                    shopProducts.get(crrIndex).count--;
+                                    count.setText(String.valueOf(shopProducts.get(crrIndex).count));
+                                    // priceLabel.setText("Preis: " + df.format(pricce) + "€");
+                                }
+                            });
+
+                            box.getChildren().addAll(label, plusbButton, count, minusButton);
+                            box.setSpacing(2);
+                            setGraphic(box);
+                        } else {
+                            setGraphic(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        });
+
+        Stage stage = new Stage();
+        Scene scene = new Scene(shopListView);
+
+        stage.setScene(scene);
+        stage.setTitle("Einkaufsliste");
+
+        double mainX = App.stage.getX();
+        double mainY = App.stage.getY();
+
+        stage.setX(mainX + App.stage.getWidth());
+        stage.setY(mainY + bonuStage.getHeight());
+
+        stage.show();
+        shopListStage = stage;
     }
 
     ///////////////////////
@@ -330,6 +514,29 @@ public class MenuController implements Initializable {
             System.out.println(e.getMessage());
         }
         return categories;
+    }
+
+    private Customer fetchCustomer(String customerId) {
+        DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
+        String getUserSql = "SELECT customerId, firstname, lastname FROM customers WHERE customerid = ?";
+
+        try (Connection connection = dbConnection.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(getUserSql)) {
+
+            pstmt.setString(1, customerId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new Customer(
+                        rs.getString("customerId"),
+                        rs.getString("firstname"),
+                        rs.getString("lastname"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return null;
     }
 
     private List<Product> readProductsByCategory(String category) {
@@ -357,6 +564,7 @@ public class MenuController implements Initializable {
                     product = new Product(name);
                     productMap.put(name, product);
                 }
+                product.setCategory(category);
 
                 switch (size) {
                     case "small":
@@ -425,29 +633,6 @@ public class MenuController implements Initializable {
         }
     }
 
-    private Customer fetchCustomer(String customerId) {
-        DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
-        String getUserSql = "SELECT customerId, firstname, lastname FROM customers WHERE customerid = ?";
-
-        try (Connection connection = dbConnection.getConnection();
-                PreparedStatement pstmt = connection.prepareStatement(getUserSql)) {
-
-            pstmt.setString(1, customerId);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return new Customer(
-                        rs.getString("customerId"),
-                        rs.getString("firstname"),
-                        rs.getString("lastname"));
-            }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-
-        return null;
-    }
-
     private void replaceCustomerIdFieldWithLabel(Customer customer) {
         Label label = new Label(customer.firstname + " " + customer.lastname);
         label.setStyle("-fx-font: 24 arial;");
@@ -470,7 +655,8 @@ public class MenuController implements Initializable {
             customerField.clear();
             upperMenu.getChildren().set(upperMenu.getChildren().indexOf(label), customerField);
             canUseAnchors(true);
-            bonuStage.close();
+            bonuStage.close(); // Refactor
+            shopListStage.close();
         });
     }
 

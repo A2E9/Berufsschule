@@ -18,15 +18,19 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("user"));
-        scene.getStylesheets().add(getClass().getResource("css/styles.css").toExternalForm());
+        scene = new Scene(loadFXML("admin"));
+        // Prevent Caching
+        String cssPath = getClass().getResource("css/styles.css").toExternalForm();
+        scene.getStylesheets().remove(cssPath);
+        scene.getStylesheets().add(cssPath);
+        // End
         stage.setScene(scene);
         stage.show();
         App.stage = stage;
 
         DatabaseUtils.createNewTable();
     }
-    
+
     static void setRoot(String fxml) throws IOException {
         Parent root = loadFXML(fxml);
         scene.setRoot(root);

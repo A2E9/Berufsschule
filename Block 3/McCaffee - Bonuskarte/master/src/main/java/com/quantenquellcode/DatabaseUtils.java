@@ -38,13 +38,21 @@ public class DatabaseUtils {
                 + "    username text NOT NULL,\n"
                 + "    password text NOT NULL\n"
                 + ");";
+        String sqlBonus = "CREATE TABLE IF NOT EXISTS bonus (\n"
+                + "    id integer PRIMARY KEY,\n"
+                + "    customer_id text NOT NULL,\n"
+                + "    count integer DEFAULT 0 NOT NULL,\n"
+                + "    FOREIGN KEY(customer_id) REFERENCES customers(id)\n"
+                + ");";
 
         try (Connection conn = DriverManager.getConnection(url);
                 Statement stmt = conn.createStatement()) {
-            stmt.execute(sqlCustomers);
-            stmt.execute(sqlUsers);
-            stmt.execute(sqlProducts);
-            stmt.execute(sqlProductSizes);
+                        stmt.execute(sqlBonus);
+                        stmt.execute(sqlUsers);
+                        stmt.execute(sqlProducts);
+                        stmt.execute(sqlCustomers);
+                        // stmt.execute(sqlProductSizes);
+                        // stmt.execute(sqlProductSizes);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
