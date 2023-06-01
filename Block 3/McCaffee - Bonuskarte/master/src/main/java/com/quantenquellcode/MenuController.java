@@ -269,7 +269,7 @@ public class MenuController implements Initializable {
         anchorsByCategory.put("dessert", dessertAnchor);
 
         for (String category : fetchCategories()) {
-            productsByCategory.put(category, readProductsByCategory(category));
+            productsByCategory.put(category, fetchProductsByCategory(category));
 
             for (ButtonBase buttonBase : displayButtons(productsByCategory.get(category)).getItems()) {
                 anchorsByCategory.get(category).getChildren().add(buttonBase);
@@ -632,7 +632,7 @@ public class MenuController implements Initializable {
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement selectStmt = connection.prepareStatement(selectAmountSql);
              PreparedStatement updateStmt = connection.prepareStatement(updateAmountSql);) {
-            // Retrieve current amount from the database
+
             selectStmt.setString(1, customerDB_ID);
             ResultSet resultSet = selectStmt.executeQuery();
     
@@ -641,11 +641,9 @@ public class MenuController implements Initializable {
                 currentAmount = resultSet.getBigDecimal("amount");
             }
     
-            // Calculate new amount by adding totalPrice to currentAmount
             BigDecimal totalPriceDecimal = BigDecimal.valueOf(totalPrice);
             BigDecimal newAmount = currentAmount.add(totalPriceDecimal);
     
-            // Update the database with the new amount
             updateStmt.setBigDecimal(1, newAmount);
             updateStmt.setString(2, customerDB_ID);
             updateStmt.executeUpdate();
@@ -653,11 +651,6 @@ public class MenuController implements Initializable {
             System.out.println(e.getSQLState());
         }
     }
-    
-    
-    
-    
-    
 
     private List<String> fetchCategories() {
         DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
@@ -703,7 +696,7 @@ public class MenuController implements Initializable {
         return null;
     }
 
-    private List<Product> readProductsByCategory(String category) {
+    private List<Product> fetchProductsByCategory(String category) {
         DatabaseConnection dbConnection = new DatabaseConnection("caffeshop.db");
         String getUserSql = "SELECT po.name, po.category, pi.size, pi.price "
                 + " FROM products po "
@@ -777,8 +770,6 @@ public class MenuController implements Initializable {
         String inputId = customerField.getText().trim();
         Customer customer = fetchCustomer(inputId);
 
-        customerDB_ID = customer.id;
-
         customerField.setStyle("");
         boolean invalidInput = false;
         if (inputId.length() == 0) {
@@ -788,8 +779,10 @@ public class MenuController implements Initializable {
         if (invalidInput) {
             return;
         }
-
+        
         if (customer != null) {
+            customerDB_ID = customer.id; // used for updateCustomerAmount
+            
             canUseAnchors(false);
             displayCustomerFoundAlert(customer);
             replaceCustomerIdFieldWithLabel(customer);
