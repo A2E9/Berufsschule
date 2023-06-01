@@ -67,8 +67,6 @@ class Customer {
 }
 
 class Product {
-    private static Map<String, Product> instances = new HashMap<>();
-    Map<String, Integer> counts = new HashMap<>();
     String name;
     float small;
     float mid;
@@ -76,7 +74,7 @@ class Product {
     float universal;
     String category;
 
-    // int count = 0;
+    Map<String, Integer> counts = new HashMap<>();
 
     public Product(String name) {
         this.name = name;
@@ -96,19 +94,19 @@ class Product {
         this.category = category;
     }
 
-    public static Product getInstance(String name) {
-        if (!instances.containsKey(name)) {
-            instances.put(name, new Product(name));
-        }
-        return instances.get(name);
-    }
-
     public int getCount(String size) {
         return counts.getOrDefault(size, 1);
     }
 
     public void addCount(String size) {
         counts.put(size, getCount(size) + 1);
+    }
+
+    public void subCount(String size) {
+        int currentCount = getCount(size);
+        if (currentCount > 0) {
+            counts.put(size, currentCount - 1);
+        }
     }
 
     public void resetCount(String size) {
@@ -121,12 +119,6 @@ class Product {
         }
     }
 
-    public void subCount(String size) {
-        int currentCount = getCount(size);
-        if (currentCount > 0) {
-            counts.put(size, currentCount - 1);
-        }
-    }
 
     public void setSmallPrice(float small) {
         this.small = small;
@@ -165,23 +157,6 @@ class Product {
             default:
                 return 0.0f;
         }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        Product product = (Product) obj;
-        return Objects.equals(name, product.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
     }
 
     @Override
@@ -369,10 +344,6 @@ public class MenuController implements Initializable {
             addProduct(product);
             existingProduct = product;
         } else
-            // {
-            // existingProduct.resetCount(size);
-            // }
-
             existingProduct.addCount(size);
         String key = product.name + ";" + size;
         Label countLabel = countLabels.get(key);
@@ -468,7 +439,6 @@ public class MenuController implements Initializable {
 
         shopListView.getItems().clear();
 
-        // Create a new stage if it doesn't exist
         if (shopListStage == null) {
             shopListStage = new Stage();
             Scene scene = new Scene(shopListView);
@@ -483,7 +453,6 @@ public class MenuController implements Initializable {
             shopListStage.setY(mainY + bonuStage.getHeight());
         }
 
-        // Show the stage
         shopListStage.show();
     }
 
@@ -571,8 +540,6 @@ public class MenuController implements Initializable {
                 if (caffee.small != 0.0) {
                     MenuItem smallItem = new MenuItem("Klein");
                     smallItem.setOnAction(event -> {
-                        // System.out.println("Price: " + caffee.small);
-                        // updatePrice(caffee.small); // refactor to addToShopList
                         addToShopList(caffee, "klein");
                     });
                     menuBtn.getItems().add(smallItem);
@@ -580,8 +547,6 @@ public class MenuController implements Initializable {
                 if (caffee.mid != 0.0) {
                     MenuItem midItem = new MenuItem("Mittel");
                     midItem.setOnAction(event -> {
-                        // System.out.println("Price: " + caffee.mid);
-                        // updatePrice(caffee.mid);
                         addToShopList(caffee, "mittel");
                     });
                     menuBtn.getItems().add(midItem);
@@ -589,8 +554,6 @@ public class MenuController implements Initializable {
                 if (caffee.big != 0.0) {
                     MenuItem bigItem = new MenuItem("Groß");
                     bigItem.setOnAction(event -> {
-                        // System.out.println("Price: " + caffee.big);
-                        // updatePrice(caffee.big);
                         addToShopList(caffee, "groß");
                     });
                     menuBtn.getItems().add(bigItem);
@@ -599,8 +562,6 @@ public class MenuController implements Initializable {
             } else {
                 Button button = new Button(caffee.name + "");
                 button.setOnAction((e) -> {
-                    // System.out.println("Price: " + caffee.universal);
-                    // updatePrice(caffee.universal);
                     addToShopList(caffee, "universal");
                 });
                 btn = button;
