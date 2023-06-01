@@ -18,7 +18,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("admin"));
+        scene = new Scene(loadFXML("menu"));
         // Prevent Caching
         String cssPath = getClass().getResource("css/styles.css").toExternalForm();
         scene.getStylesheets().remove(cssPath);

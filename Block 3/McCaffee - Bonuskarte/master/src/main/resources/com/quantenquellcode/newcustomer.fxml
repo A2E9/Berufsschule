@@ -12,9 +12,10 @@
    <children>
       <AnchorPane layoutY="85.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="395.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
          <children>
-            <Button layoutX="443.0" layoutY="120.0" mnemonicParsing="false" onAction="#addCustomer" prefHeight="35.0" prefWidth="140.0" styleClass="confirmButton" text="Confirm" />
-            <TextField fx:id="secondnameField" layoutX="225.0" layoutY="270.0" />
+            <TextField fx:id="customerIdField" layoutX="225.0" layoutY="90.0" />
             <TextField fx:id="firstnameField" layoutX="225.0" layoutY="180.0" />
+            <TextField fx:id="secondnameField" layoutX="225.0" layoutY="270.0" />
+            <Button layoutX="443.0" layoutY="120.0" mnemonicParsing="false" onAction="#addCustomer" prefHeight="35.0" prefWidth="140.0" styleClass="confirmButton" text="Confirm" />
             <Button layoutX="443.0" layoutY="240.0" mnemonicParsing="false" onAction="#returnBack" prefHeight="35.0" prefWidth="140.0" styleClass="cancelButton" text="Cancel" />
             <Label layoutX="68.0" layoutY="90.0" text="Kundennummer">
                <font>
@@ -31,7 +32,6 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="customerIdField" layoutX="225.0" layoutY="90.0" />
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="75.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">

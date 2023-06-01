@@ -90,20 +90,27 @@ public class NewCustomerController {
         String insertCustomerSql = "INSERT INTO customers (firstname, lastName, customerId) VALUES (?,?,?); ";
         String insertBonusSql = "INSERT INTO bonus (customer_id, count) VALUES "
                 + "((SELECT id from customers WHERE customerId=?), 0);";
-
+        String insertPaymentSql = "INSERT INTO payment (customer_id, amount) VALUES "
+                + "((SELECT id from customers WHERE customerId=?), 0.0);";
+    
         try (Connection connection = dbConnection.getConnection();) {
+            // Insert the customer record
             PreparedStatement pstmt = connection.prepareStatement(insertCustomerSql);
             pstmt.setString(1, firstname);
             pstmt.setString(2, secondname);
             pstmt.setString(3, customerNr);
             pstmt.executeUpdate();
-            
+    
+            // Insert the bonus record
             PreparedStatement pstmt2 = connection.prepareStatement(insertBonusSql);
             pstmt2.setString(1, customerNr);
             pstmt2.executeUpdate();
-            
-
-
+    
+            // Insert the payment record with initial amount as 0
+            PreparedStatement pstmt3 = connection.prepareStatement(insertPaymentSql);
+            pstmt3.setString(1, customerNr);
+            pstmt3.executeUpdate();
+    
             showAlert(Alert.AlertType.INFORMATION, "Erfolg!", null, "Kunden erstellt!");
         } catch (SQLException e) {
             String errorMessage = e.getErrorCode() == 19 ? "Ein Kunde mit dieser ID existiert bereits!"

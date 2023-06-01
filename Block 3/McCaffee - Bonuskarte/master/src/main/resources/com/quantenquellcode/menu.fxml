@@ -111,8 +111,8 @@
                   <Image url="@pics/McCafe%20Icon.png" />
                </image>
             </ImageView>
-            <Button layoutX="27.0" layoutY="18.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="cancelButton" text="Cancel Order" />
-            <Button layoutX="189.0" layoutY="18.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" styleClass="confirmButton" text="Confirm Order" />
+            <Button fx:id="cancelOrder" layoutX="27.0" layoutY="18.0" mnemonicParsing="false" onAction="#cancelOrder" prefHeight="40.0" prefWidth="130.0" styleClass="cancelButton" text="Cancel Order" />
+            <Button fx:id="confirmOrder" layoutX="189.0" layoutY="18.0" mnemonicParsing="false" onAction="#confirmOrder" prefHeight="40.0" prefWidth="130.0" styleClass="confirmButton" text="Confirm Order" />
             <Label fx:id="priceLabel" layoutX="345.0" layoutY="25.0" prefHeight="27.0" prefWidth="143.0" text="Preis: 0€">
                <font>
                   <Font size="18.0" />
