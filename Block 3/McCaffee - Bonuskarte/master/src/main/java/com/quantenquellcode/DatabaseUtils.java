@@ -23,13 +23,13 @@ public class DatabaseUtils {
                                 + "    category TEXT NOT NULL\n"
                                 + ");";
 
-                String sqlProductSizes = "CREATE TABLE IF NOT EXISTS product_sizes (\n"
-                                + "    id INTEGER PRIMARY KEY,\n"
-                                + "    product_id INTEGER,\n"
-                                + "    size TEXT NOT NULL,\n"
-                                + "    price REAL NOT NULL,\n"
-                                + "    FOREIGN KEY(product_id) REFERENCES products(id)\n"
-                                + ");";
+                // String sqlProductSizes = "CREATE TABLE IF NOT EXISTS product_sizes (\n"
+                //                 + "    id INTEGER PRIMARY KEY,\n"
+                //                 + "    product_id INTEGER,\n"
+                //                 + "    size TEXT NOT NULL,\n"
+                //                 + "    price REAL NOT NULL,\n"
+                //                 + "    FOREIGN KEY(product_id) REFERENCES products(id)\n"
+                //                 + ");";
 
                 String sqlUsers = "CREATE TABLE IF NOT EXISTS users (\n"
                                 + "    id integer PRIMARY KEY,\n"
