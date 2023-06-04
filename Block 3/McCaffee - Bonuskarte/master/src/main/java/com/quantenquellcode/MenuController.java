@@ -415,7 +415,7 @@ public class MenuController implements Initializable {
         while (xBonus > 0 && !productShopMapByPrice.isEmpty()) {
             for (Map.Entry<Float, Product> product : productShopMapByPrice.entrySet()) {
                 float price = product.getKey();
-                if (smallestPrice > price) {
+                if (smallestPrice > price && product.getValue().getCategory().equals("coffee")) {
                     smallestPrice = price;
                     name = product.getValue().getName();
                     lowestPriceCount = productShopMapByPriceCopy.get(name).getLowestPriceCount();
