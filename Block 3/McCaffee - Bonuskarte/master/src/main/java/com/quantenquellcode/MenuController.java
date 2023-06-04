@@ -238,7 +238,8 @@ class Product {
 }
 
 public class MenuController implements Initializable {
-
+    @FXML
+    private TabPane productsPane; 
     @FXML
     private AnchorPane kaltgetraenkAnchor;
     @FXML
@@ -253,10 +254,6 @@ public class MenuController implements Initializable {
     private AnchorPane coffeeAnchor;
     @FXML
     private AnchorPane vitalAnchor;
-
-    @FXML
-    private TabPane productsPane; 
-
     @FXML
     private AnchorPane upperMenu;
     @FXML
@@ -285,7 +282,7 @@ public class MenuController implements Initializable {
 
     private ListView<String> shopListView;
 
-    private Map<Float, Product> productShopMapByPrice; // checkCustomerBonus cz dont know which prices were added
+    private Map<Float, Product> productShopMapByPrice; 
     private Map<String, Product> productShopMap;
     private Map<String, Label> countLabels;
 
@@ -360,6 +357,7 @@ public class MenuController implements Initializable {
             entry.getValue().resetAllCounts();
         }
         productShopMap.clear();
+        productShopMapByPrice.clear();
     }
 
     private Boolean checkCustomerBonus() {
@@ -680,7 +678,7 @@ public class MenuController implements Initializable {
         };
 
         for (int i = 0; i < products.size(); i++) {
-            Product caffee = products.get(i);
+            Product product = products.get(i);
 
             int row = i / buttonsPerRow;
             int col = i % buttonsPerRow;
@@ -695,12 +693,12 @@ public class MenuController implements Initializable {
             MenuButton menuBtn = null;
 
             for (Map.Entry<String, String> productSize : sizes.entrySet()) {
-                if (!productSize.getKey().equals("universal") && caffee.getPrice(productSize.getKey()) != 0.0) {
+                if (!productSize.getKey().equals("universal") && product.getPrice(productSize.getKey()) != 0.0) {
                     if (menuBtn == null) {
-                        menuBtn = new MenuButton(caffee.getName());
+                        menuBtn = new MenuButton(product.getName());
                     }
                     MenuItem menuItem = createMenuItem(productSize.getValue(),
-                            () -> addToShopList(caffee, productSize.getKey()));
+                            () -> addToShopList(product, productSize.getKey()));
                     menuBtn.getItems().add(menuItem);
                 }
             }
@@ -708,10 +706,10 @@ public class MenuController implements Initializable {
             if (menuBtn != null) {
                 btn = menuBtn;
                 menuBtn.popupSideProperty().set(Side.RIGHT);
-            } else if (caffee.getPrice("universal") != 0.0) {
-                Button button = new Button(caffee.getName() + "");
+            } else if (product.getPrice("universal") != 0.0) {
+                Button button = new Button(product.getName() + "");
                 button.setOnAction((e) -> {
-                    addToShopList(caffee, "universal");
+                    addToShopList(product, "universal");
                 });
                 btn = button;
             }
@@ -978,7 +976,7 @@ public class MenuController implements Initializable {
         customerLabel.setLayoutY(customerField.getLayoutY());
 
         upperMenu.getChildren().set(upperMenu.getChildren().indexOf(customerField), customerLabel);
-
+        cancelOrder();
         checkCustButton.setText("Neuer Kunde");
         checkCustButton.setOnAction(event -> {
             priceLabel.setText("Preis: 0€");
@@ -1057,7 +1055,7 @@ public class MenuController implements Initializable {
         sb.append("----------------------------------------------\n");
         sb.append("Gesamt:  ").append(String.format("%.2f", totalPrice)).append("€\n");
         sb.append("----------------------------------------------\n");
-        sb.append(freeCupCount).append(" Tasse(n) kostenlos - Gesamt ").append(String.format("%.2f", newTotal))
+        sb.append(freeCupCount).append(" Tasse(n) kostenlos - Gesamt:  ").append(String.format("%.2f", newTotal))
                 .append("€");
 
         VBox vbox = new VBox();
