@@ -5,5 +5,6 @@ module com.quantenquellcode {
     requires transitive java.sql;
 
     opens com.quantenquellcode to javafx.fxml;
+    opens com.quantenquellcode.controller to javafx.fxml;
     exports com.quantenquellcode;
 }

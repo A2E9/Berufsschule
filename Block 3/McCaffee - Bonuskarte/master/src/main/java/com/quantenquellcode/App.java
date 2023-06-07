@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import com.quantenquellcode.utils.DatabaseUtils;
+
 /**
  * JavaFX App
  */
@@ -18,7 +20,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("menu"));
+        scene = new Scene(loadFXML("admin"));
         // Prevent Caching
         String cssPath = getClass().getResource("css/styles.css").toExternalForm();
         scene.getStylesheets().remove(cssPath);
@@ -31,11 +33,13 @@ public class App extends Application {
         DatabaseUtils.createNewTable();
     }
 
-    static void setRoot(String fxml) throws IOException {
+    public static void setRoot(String fxml) throws IOException {
         Parent root = loadFXML(fxml);
         scene.setRoot(root);
         scene.getWindow().sizeToScene();
         stage.centerOnScreen();
+
+        
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

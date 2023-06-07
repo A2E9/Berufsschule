@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.quantenquellcode.AdminController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.quantenquellcode.controller.AdminController">
    <children>
       <AnchorPane prefHeight="75.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
          <children>
@@ -26,7 +26,7 @@
       <AnchorPane layoutY="85.0" prefHeight="395.0" prefWidth="640.0" style="-fx-background-color: #92a8D1;">
          <children>
             <Button layoutX="75.0" layoutY="14.0" mnemonicParsing="false" onAction="#artikelMenu" prefHeight="180.0" prefWidth="140.0" styleClass="defButton" text="Artikelliste" />
-            <Button layoutX="248.0" layoutY="14.0" mnemonicParsing="false" onAction="#usermMenu" prefHeight="180.0" prefWidth="140.0" styleClass="defButton" text="Mitarbeiterkonten" />
+            <Button layoutX="248.0" layoutY="14.0" mnemonicParsing="false" onAction="#userMenu" prefHeight="180.0" prefWidth="140.0" styleClass="defButton" text="Mitarbeiterkonten" />
             <Button layoutX="416.0" layoutY="14.0" mnemonicParsing="false" onAction="#customerMenu" prefHeight="180.0" prefWidth="140.0" styleClass="defButton" text="Kundenkonten" />
             <Button layoutX="75.0" layoutY="210.0" mnemonicParsing="false" onAction="#logout" prefHeight="180.0" prefWidth="140.0" styleClass="defButton" text="Update" />
             <Button layoutX="248.0" layoutY="210.0" mnemonicParsing="false" onAction="#logout" prefHeight="180.0" prefWidth="140.0" styleClass="defButton" text="Restart" />
